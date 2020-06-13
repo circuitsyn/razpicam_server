@@ -21,6 +21,9 @@ PAGE="""\
 </html>
 """
 
+with open('html_file.html', 'r') as f:
+    html_string = f.read()
+
 class StreamingOutput(object):
     def __init__(self):
         self.frame = None
@@ -45,7 +48,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_header('Location', '/index.html')
             self.end_headers()
         elif self.path == '/index.html':
-            content = PAGE.encode('utf-8')
+            content = html_string.encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.send_header('Content-Length', len(content))
@@ -84,7 +87,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
     output = StreamingOutput()
     #Uncomment the next line to change your Pi's Camera rotation (in degrees)
-    #camera.rotation = 90
+    camera.rotation = 180
     camera.start_recording(output, format='mjpeg')
     try:
         address = ('', 8000)
