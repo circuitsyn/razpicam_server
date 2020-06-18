@@ -16,6 +16,7 @@ def gen():
     """Video streaming generator function."""
     while True:
         rval, frame = vc.read()
+        #flip code to ruen camera upside down
         frame = cv2.flip(frame, -1)
         # cv2.imwrite('t.jpg', frame)
         # yield (b'--frame\r\n'
