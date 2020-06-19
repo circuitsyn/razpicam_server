@@ -1,7 +1,11 @@
 .snapFrame {
-    border-radius: 20px;
-    border: solid 2px black;
+  border-radius: 25px;
+  border: solid 2px black;
 }
 
 .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
-  .toggle.ios .toggle-handle { border-radius: 20px; }
+.toggle.ios .toggle-handle { border-radius: 20px; }
+
+#snapBtn {
+  border-radius: 20px;
+}
