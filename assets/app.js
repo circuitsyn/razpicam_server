@@ -1,48 +1,21 @@
 $(document).ready(function() {
 
+    // Add event listener to id snapBtn and trigger a snapshot
     $(function() { $("#snapBtn").click(function (event) { 
         $.getJSON('/PhotoSnap', { },
-    function(data) { }); return false; }); 
-    // trigger snap button animation
-    animateCSS('#snapBtn', 'animate__rubberBand');
+        function(data) { });
+        
+        // trigger snap button animation
+        // select and grab snap photo button by id tag
+        const element = document.querySelector('#snapBtn');
+        // add animation class to snap button via stored id element
+        element.classList.add('animate__animated', 'animate__rubberBand');
+        // Add detection to remove animation class
+        element.addEventListener('animationend', () => {
+            element.classList.remove('animate__animated', 'animate__rubberBand');
+        });
     });
-
-
-    // const animateCSS = (element, animation, prefix = 'animate__') =>
-    // // We create a Promise and return it
-    // new Promise((resolve, reject) => {
-    //     const animationName = `${prefix}${animation}`;
-    //     const node = document.querySelector(element);
-
-    //     node.classList.add(`${prefix}animated`, animationName);
-
-    //     // When the animation ends, we clean the classes and resolve the Promise
-    //     function handleAnimationEnd() {
-    //     node.classList.remove(`${prefix}animated`, animationName);
-    //     node.removeEventListener('animationend', handleAnimationEnd);
-
-    //     resolve('Animation ended');
-    //     }
-
-    //     node.addEventListener('animationend', handleAnimationEnd);
-    // });
-
-    // annimate.css function
-    animateCSS = (element, animationName, callback) => {
-        const node = document.querySelector(element)
-        node.classList.add('animated', animationName)
-
-    function handleAnimationEnd() {
-    node.classList.remove('animated', animationName)
-    node.removeEventListener('animationend', handleAnimationEnd)
-
-    if (typeof callback === 'function') callback()
-    }
-
-    node.addEventListener('animationend', handleAnimationEnd)
-        }
-
-
+    });
 
 
 });

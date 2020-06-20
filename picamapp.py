@@ -41,7 +41,6 @@ def PhotoSnap():
 
     #set a variable with the current time to use as image file name
     curTime = (time.strftime("%I%M%S"))
-    print(curTime)
     #take a photo, give it a name, and resize it to fit into Parse
     # cam.capture(curTime, resize=(320,240))
     rval, frame = vc.read()
