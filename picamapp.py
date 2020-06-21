@@ -43,14 +43,15 @@ def PhotoSnap():
     rval, frame = vc.read()
     frame = cv2.flip(frame, -1)
     # code to write frame to jpeg with timestamp as filename
-    cv2.imwrite('/home/pi/shared/3DPrinterCam/photos/'+ curTime  +'.jpg', frame)
+    cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime  +'.jpg', frame)
     return "Nothing"
 
 # provide photos for photo gallery
 @app.route('/photoGalleryBuild', methods=['GET', 'POST'])
 def photoGalleryBuild():
-    path = "/home/pi/shared/3DPrinterCam/photos/"
-    imgData = glob.glob(path + "*jpg")
+    path = "/home/pi/shared/3DPrinterCam/static/imgs/captures/"
+    imgData = map(os.path.basename, glob.glob(path + "*jpg"))
+    # imgData = glob.glob(path + "*jpg")
     print("imgData: ", imgData)
     return jsonify({"imgArray": imgData})
 

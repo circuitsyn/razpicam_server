@@ -14,27 +14,39 @@ $(document).ready(function() {
         element.addEventListener('animationend', () => {
             element.classList.remove('animate__animated', 'animate__rubberBand');
         });
+        grabGalleryData();
     });
     });
 
     // gallery creation
-    // populateGallery = (photos) => {
-    //     console.log(photos)
-    //     for(i=0; i < photos.length; i++) {
-    //         let startDiv = $('<div>');
-    //         $(startDiv).addClass('col-3');
-    //         let startImg = $('<img>');
-    //         $(startImg).addClass('galleryImg');
-    //         $(startImg).attr('src', photos[i])
-    //         $(startDiv).append(startImg);
-    //     }
-    // }
+    populateGallery = (photosObj) => {
+        console.log(photosObj);
+        $('#photoGallery').empty();
+        let filenameARR = photosObj.imgArray;
+        for(i=0; i < filenameARR.length; i++) {
+            let startDiv = $('<div>');
+            $(startDiv).addClass('col-3');
+            let startImg = $('<img>');
+            $(startImg).addClass('galleryImg img-thumbnail img-fluid mb-3');
+            $(startImg).attr('src', '../static/imgs/captures/' + filenameARR[i]);
+            $(startImg).attr('alt', 'printer snapshot');
+            $(startDiv).append(startImg);
+            $('#photoGallery').append(startDiv);
+        }
+    }
 
     // grab photo data
     grabGalleryData = () => {
         $.getJSON('/photoGalleryBuild',
-        function(data) {console.log('data', data) });
-    }
+        function(data) {
+            if (data || data.imgArray) {
+                populateGallery(data);
+            }
+            else {
+                console.log('NoData');
+            }
+        })}
+        
 
     grabGalleryData();
 

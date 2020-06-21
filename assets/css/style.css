@@ -15,3 +15,22 @@
   height: auto;
   border-radius: 25px;
 }
+
+.galleryImg {
+  max-width: 100%;
+  height: auto;
+}
+
+#photoGallery {
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera
+.example::-webkit-scrollbar {
+display: none;
+}
+
+/* Hide scrollbar for IE and Edge */  
+/* .example {
+-ms-overflow-style: none;
+} */ */
