@@ -7,5 +7,11 @@
 .toggle.ios .toggle-handle { border-radius: 20px; }
 
 #snapBtn {
-  border-radius: 20px;
+  border-radius: 20px !important;
+}
+
+#printerView {
+  max-width: 100%;
+  height: auto;
+  border-radius: 25px;
 }

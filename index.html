@@ -5,6 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="../static/imgs/3d-printer.png" type="image/gif">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -19,18 +20,21 @@
     <!-- Image and text -->
     <nav class="navbar navbar-dark bg-dark">
       <a class="navbar-brand" href="#">
-        <img src="../static/imgs/3d-printer.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+        <img src="../static/imgs/3d-printer.png" width="30" height="30" class="d-inline-block align-top" alt="3d printer logo" loading="lazy">
         3D Printer Viewing Station
       </a>
     </nav>
 
     <div class="container mt-5">
       <div class="row">
-        <div class="col">
-          <center><img src="{{ url_for('video_feed') }}" width="640" height="480" alt="printer stream"></center>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+          <img id="printerView" class="img-fluid" src="{{ url_for('video_feed') }}" alt="printer stream">
+        </div>
+        <div id="photoGallery" class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+
         </div>
       </div>
-      <div class="row m-3">
+      <div class="row mt-3">
         <div class="col-6">
           <div class="snapFrame p-3">
             <!-- <input type="checkbox" checked data-toggle="toggle" data-size="small" data-style="ios" data-onstyle="danger"> -->

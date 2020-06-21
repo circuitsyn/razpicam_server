@@ -17,5 +17,26 @@ $(document).ready(function() {
     });
     });
 
+    // gallery creation
+    // populateGallery = (photos) => {
+    //     console.log(photos)
+    //     for(i=0; i < photos.length; i++) {
+    //         let startDiv = $('<div>');
+    //         $(startDiv).addClass('col-3');
+    //         let startImg = $('<img>');
+    //         $(startImg).addClass('galleryImg');
+    //         $(startImg).attr('src', photos[i])
+    //         $(startDiv).append(startImg);
+    //     }
+    // }
+
+    // grab photo data
+    grabGalleryData = () => {
+        $.getJSON('/photoGalleryBuild',
+        function(data) {console.log('data', data) });
+    }
+
+    grabGalleryData();
+
 
 });

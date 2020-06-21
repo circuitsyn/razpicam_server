@@ -4,6 +4,7 @@ import cv2
 import socket
 import io
 import os
+import glob
 import time
 
 app = Flask(__name__)
@@ -35,19 +36,23 @@ def video_feed():
 # Photo Snap Function
 @app.route('/PhotoSnap')
 def PhotoSnap():
-    print('In PhotoSnap')
-    # command = "raspistill -o \shared\img.jpg"
     # os.system(command)
-
     #set a variable with the current time to use as image file name
     curTime = (time.strftime("%I%M%S"))
     #take a photo, give it a name, and resize it to fit into Parse
-    # cam.capture(curTime, resize=(320,240))
     rval, frame = vc.read()
     frame = cv2.flip(frame, -1)
     # code to write frame to jpeg with timestamp as filename
     cv2.imwrite('/home/pi/shared/3DPrinterCam/photos/'+ curTime  +'.jpg', frame)
     return "Nothing"
+
+# provide photos for photo gallery
+@app.route('/photoGalleryBuild', methods=['GET', 'POST'])
+def photoGalleryBuild():
+    path = "/home/pi/shared/3DPrinterCam/photos/"
+    imgData = glob.glob(path + "*jpg")
+    print("imgData: ", imgData)
+    return jsonify({"imgArray": imgData})
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
