@@ -27,18 +27,60 @@
 
     <div class="container mt-5">
       <div class="row">
-        <!-- Live Printer Side COlumn 1 -->
+        <!-- Live Printer Side Column 1 -->
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+          <!-- video feed -->
           <img id="printerView" class="img-fluid" src="{{ url_for('video_feed') }}" alt="printer stream">
+          <!-- Photo Snap Section -->
           <div class="row mt-3">
             <div class="col">
-              <div class="snapFrame p-3">
+              <div class="snapFrame p-3 d-flex justify-content-between">
                 <!-- <input type="checkbox" checked data-toggle="toggle" data-size="small" data-style="ios" data-onstyle="danger"> -->
-                <label for="snapBtn">Take a screen grab from the stream:</label>
-                <button id="snapBtn" type="button" class="snapBtn btn btn-secondary m-2">Snap Photo</button>
+                <label class="snapLabel" for="snapBtn">Take a screen grab from the stream:</label>
+                <button id="snapBtn" type="submit" class="snapBtn btn btn-sm btn-secondary">Snap Photo</button>
               </div>
             </div>
           </div>
+          <!-- Timelapse Section -->
+          <form>
+            <div class="row mt-3">
+              <div class="col">
+                <div class="snapFrame p-3">
+                  <label for="snapBtn">Input your settings for the timelapse:</label>
+                  <!-- Days -->
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Days</span>
+                    </div>
+                    <input id="daysInput" type="text" placeholder="00" class="form-control" aria-label="timelapse days input" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                  <!-- Hours -->
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Hours</span>
+                    </div>
+                    <input id="hrsInput" type="text" placeholder="00" class="form-control" aria-label="timelapse hours input" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                  <!-- Minutes -->
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Minutes</span>
+                    </div>
+                    <input id="minsInput" type="text" placeholder="00" class="form-control" aria-label="timelapse minutes input" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                  <!-- Seconds -->
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Seconds</span>
+                    </div>
+                    <input id="secsInput" type="text" placeholder="00" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                  <!-- Timelapse Submit Button -->
+                  <button id="timelapseBtn" type="submit" class="timelapseBtn btn btn-sm btn-secondary">Start Timelapse</button>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
         <!-- Photo Callery Column 2 -->
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -46,8 +88,8 @@
 
           </div>
         </div>
-        </div>
       </div>
+    </div>
       <!-- <div class="row mt-3">
         <div class="col-6">
           <div class="snapFrame p-3"> -->

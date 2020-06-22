@@ -18,9 +18,32 @@ $(document).ready(function() {
     });
     });
 
+    // Add event listener to id timelapseBtn and trigger a snapshot
+    $(function() { $("#timelapseBtn").click(function (e) { 
+        e.preventDefault();
+        // $.getJSON('/TimelapseSubmit', { },
+        // function(data) { });
+        
+        let daysVal = $('#daysInput').val();
+        let hrsVal = $('#hrsInput').val();
+        let minsVal = $('#minsInput').val();
+        let secsVal = $('#secsInput').val();
+        console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal)
+
+        // trigger snap button animation
+        // select and grab snap photo button by id tag
+        const element = document.querySelector('#timelapseBtn');
+        // add animation class to snap button via stored id element
+        element.classList.add('animate__animated', 'animate__rubberBand');
+        // Add detection to remove animation class
+        element.addEventListener('animationend', () => {
+            element.classList.remove('animate__animated', 'animate__rubberBand');
+        });
+    });
+    });
+
     // gallery creation
     populateGallery = (photosObj) => {
-        console.log(photosObj);
         $('#photoGallery').empty();
         let filenameARR = photosObj.imgArray;
         for(i=0; i < filenameARR.length; i++) {
