@@ -1,5 +1,6 @@
 from flask import Flask, render_template, Response, jsonify, request
 import picamera
+import json
 import cv2
 import socket
 import io
@@ -46,13 +47,24 @@ def PhotoSnap():
     cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime  +'.jpg', frame)
     return "Nothing"
 
-# provide photos for photo gallery
+# Timelapse
+@app.route('/TimelapseSubmit', methods=['POST'])
+def TimelapseSubmit():
+    daysValue = int(request.form['daysValue'])
+    hrsValue = int(request.form['hrsValue'])
+    minsValue = int(request.form['minsValue'])
+    secsValue = int(request.form['secsValue'])
+    delayValue = int(request.form['delayValue'])
+    print(int(delayValue) * 4)
+    print(daysValue, hrsValue, minsValue, secsValue, delayValue)
+    return "Nada"
+
+# Gallery Provide & Update
 @app.route('/photoGalleryBuild', methods=['GET', 'POST'])
 def photoGalleryBuild():
     path = "/home/pi/shared/3DPrinterCam/static/imgs/captures/"
     imgData = map(os.path.basename, glob.glob(path + "*jpg"))
     # imgData = glob.glob(path + "*jpg")
-    print("imgData: ", imgData)
     return jsonify({"imgArray": imgData})
 
 if __name__ == '__main__':

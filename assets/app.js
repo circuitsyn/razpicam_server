@@ -18,17 +18,25 @@ $(document).ready(function() {
     });
     });
 
-    // Add event listener to id timelapseBtn and trigger a snapshot
+    // Add event listener to id #timelapseBtn and trigger a snapshot
     $(function() { $("#timelapseBtn").click(function (e) { 
         e.preventDefault();
-        // $.getJSON('/TimelapseSubmit', { },
-        // function(data) { });
         
+        // gather values
         let daysVal = $('#daysInput').val();
         let hrsVal = $('#hrsInput').val();
         let minsVal = $('#minsInput').val();
         let secsVal = $('#secsInput').val();
-        console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal)
+        let delayVal = $('#delayInput').val();
+        console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal, 'delayInput: ', delayVal);
+
+        $.post('/TimelapseSubmit', {
+            daysValue: daysVal,
+            hrsValue: hrsVal,
+            minsValue: minsVal,
+            secsValue: secsVal,
+            delayValue: delayVal  
+        });
 
         // trigger snap button animation
         // select and grab snap photo button by id tag
