@@ -9,6 +9,7 @@ import glob
 import time
 
 app = Flask(__name__)
+
 vc = cv2.VideoCapture(0)
 
 @app.route('/')
@@ -35,16 +36,26 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Photo Snap Function
-@app.route('/PhotoSnap')
+@app.route('/PhotoSnap', methods=['GET', 'POST'])
 def PhotoSnap():
     # os.system(command)
+    print("snap snap")
     #set a variable with the current time to use as image file name
-    curTime = (time.strftime("%I%M%S"))
+    curTime = (time.strftime("%m%j%y"+"_"+"%H%M"))
     #take a photo, give it a name, and resize it to fit into Parse
     rval, frame = vc.read()
     frame = cv2.flip(frame, -1)
     # code to write frame to jpeg with timestamp as filename
-    cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime  +'.jpg', frame)
+    cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg', frame)
+    return "Nothing"
+
+# Delete Photo Function
+@app.route('/PhotoDelete', methods=['GET', 'POST'])
+def PhotoDelete():
+    filenameVal = request.form['filenameVal']
+    print('filename: ', filenameVal)
+    os.remove(filenameVal)
+    print("confirmed deletion")
     return "Nothing"
 
 # Timelapse
@@ -63,8 +74,7 @@ def TimelapseSubmit():
 @app.route('/photoGalleryBuild', methods=['GET', 'POST'])
 def photoGalleryBuild():
     path = "/home/pi/shared/3DPrinterCam/static/imgs/captures/"
-    imgData = map(os.path.basename, glob.glob(path + "*jpg"))
-    # imgData = glob.glob(path + "*jpg")
+    imgData = map(os.path.basename, sorted(glob.glob(path + "*jpg")))
     return jsonify({"imgArray": imgData})
 
 if __name__ == '__main__':

@@ -17,6 +17,22 @@
     <link rel="stylesheet" href="../static/css/animate.min.css">
   </head>
   <body>
+
+    <!-- Photo Modal -->
+    <div id="photoModal" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body m-auto">
+            <img id="loadingGif" class="img-fluid" src="../static/imgs/loading.gif" />
+          </div>
+          <div class="modal-footer">
+            <button id="deleteBtn" type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Image and text -->
     <nav class="navbar navbar-dark bg-dark">
       <a class="navbar-brand" href="#">
@@ -52,35 +68,35 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Days</span>
                     </div>
-                    <input id="daysInput" type="text" placeholder="00" class="form-control" aria-label="timelapse days input" aria-describedby="inputGroup-sizing-sm">
+                    <input id="daysInput" type="number" placeholder="00" class="form-control" aria-label="timelapse days input" aria-describedby="inputGroup-sizing-sm">
                   </div>
                   <!-- Hours -->
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Hours</span>
                     </div>
-                    <input id="hrsInput" type="text" placeholder="00" class="form-control" aria-label="timelapse hours input" aria-describedby="inputGroup-sizing-sm">
+                    <input id="hrsInput" type="number" placeholder="00" class="form-control" aria-label="timelapse hours input" aria-describedby="inputGroup-sizing-sm">
                   </div>
                   <!-- Minutes -->
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Minutes</span>
                     </div>
-                    <input id="minsInput" type="text" placeholder="00" class="form-control" aria-label="timelapse minutes input" aria-describedby="inputGroup-sizing-sm">
+                    <input id="minsInput" type="number" placeholder="00" class="form-control" aria-label="timelapse minutes input" aria-describedby="inputGroup-sizing-sm">
                   </div>
                   <!-- Seconds -->
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Seconds</span>
                     </div>
-                    <input id="secsInput" type="text" placeholder="00" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm">
+                    <input id="secsInput" type="number" placeholder="00" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm">
                   </div>
                   <!-- Delay -->
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Delay</span>
                     </div>
-                    <input id="delayInput" type="text" placeholder="00 (secs)" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm">
+                    <input id="delayInput" type="number" placeholder="00 (secs)" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm">
                   </div>
                   <!-- Timelapse Submit Button -->
                   <button id="timelapseBtn" type="submit" class="timelapseBtn btn btn-sm btn-secondary">Start Timelapse</button>

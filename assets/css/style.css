@@ -29,6 +29,10 @@
   margin: auto auto auto 0;
 }
 
+#loadingGif {
+  border-radius: 25px;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera
 .example::-webkit-scrollbar {
 display: none;
