@@ -38,15 +38,27 @@ def video_feed():
 # Photo Snap Function
 @app.route('/PhotoSnap', methods=['GET', 'POST'])
 def PhotoSnap():
-    # os.system(command)
     print("snap snap")
     #set a variable with the current time to use as image file name
-    curTime = (time.strftime("%m%j%y"+"_"+"%H%M"))
+    curTime = (time.strftime("%m%j%y"+"_"+"%H%M_%S"))
     #take a photo, give it a name, and resize it to fit into Parse
     rval, frame = vc.read()
     frame = cv2.flip(frame, -1)
-    # code to write frame to jpeg with timestamp as filename
-    cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg', frame)
+    width = vc.get(3)
+    height = vc.get(4)
+    print("width: ", width, "height: ", height)
+
+    if rval:
+        print('rval-true?', rval)
+        # code to write frame to jpeg with timestamp as filename
+        isWritten = cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg', frame)
+        if isWritten:
+            print('image successfully written to ' + '/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg' )
+        else:
+            print('img write failed')
+    else:
+        print('rval - false', rval)
+    # vc.release()
     return "Nothing"
 
 # Delete Photo Function

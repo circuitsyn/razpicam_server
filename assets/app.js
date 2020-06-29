@@ -14,7 +14,6 @@ $(document).ready(function() {
         let filename = $('#loadingGif').attr('src');
             filename = filename.slice(2);
             filename = '/home/pi/shared/3DPrinterCam/' + filename;
-            console.log('result: ', filename)
         $.post('/PhotoDelete', {filenameVal: filename}, function(result) {
             grabGalleryData();
             });
@@ -27,9 +26,7 @@ $(document).ready(function() {
     // $("#snapBtn").on('click', function (e) { 
         console.log('event triggered');
         $.post('/PhotoSnap', {}, function(result) {
-            console.log('result: ', result)
             grabGalleryData();
-            console.log('doing the .then');
             // trigger snap button animation
             // select and grab snap photo button by id tag
             const element = document.querySelector('#snapBtn');
@@ -99,7 +96,6 @@ $(document).ready(function() {
 
     // gallery creation
     populateGallery = (photosObj) => {
-        console.log('running populate gallery')
         $('#photoGallery').empty();
         let filenameARR = photosObj.imgArray;
         for(i=0; i < filenameARR.length; i++) {
@@ -118,10 +114,8 @@ $(document).ready(function() {
     grabGalleryData = () => {
         $.getJSON('/photoGalleryBuild',
         function(data) {
-            console.log('entered grab gallery data after button click')
             if (data || data.imgArray) {
                 populateGallery(data);
-                console.log('triggered populate photoGallery function')
             }
             else {
                 console.log('NoData');
