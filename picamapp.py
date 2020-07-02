@@ -1,4 +1,5 @@
 from flask import Flask, render_template, Response, jsonify, request
+from flask_socketio import SocketIO, emit
 import picamera
 import json
 import cv2
@@ -9,8 +10,13 @@ import glob
 import time
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'include_help!'
+socketio = SocketIO(app, async_mode='threading')
+# os.urandom(12)
 
 vc = cv2.VideoCapture(0)
+vc.set(3, 1280)
+vc.set(4, 720)
 
 @app.route('/')
 def index():
@@ -21,7 +27,7 @@ def gen():
     """Video streaming generator function."""
     while True:
         rval, frame = vc.read()
-        frame = cv2.flip(frame, -1)
+        # frame = cv2.flip(frame, -1)
         # cv2.imwrite('t.jpg', frame)
         # yield (b'--frame\r\n'
         #        b'Content-Type: image/jpeg\r\n\r\n' + open('t.jpg', 'rb').read() + b'\r\n')
@@ -43,13 +49,12 @@ def PhotoSnap():
     curTime = (time.strftime("%m%j%y"+"_"+"%H%M_%S"))
     #take a photo, give it a name, and resize it to fit into Parse
     rval, frame = vc.read()
-    frame = cv2.flip(frame, -1)
+    # frame = cv2.flip(frame, -1)
     width = vc.get(3)
     height = vc.get(4)
     print("width: ", width, "height: ", height)
 
     if rval:
-        print('rval-true?', rval)
         # code to write frame to jpeg with timestamp as filename
         isWritten = cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg', frame)
         if isWritten:
@@ -57,7 +62,7 @@ def PhotoSnap():
         else:
             print('img write failed')
     else:
-        print('rval - false', rval)
+        print('rval - false - check photo snap else section of code', rval)
     # vc.release()
     return "Nothing"
 
@@ -80,6 +85,8 @@ def TimelapseSubmit():
     delayValue = int(request.form['delayValue'])
     print(int(delayValue) * 4)
     print(daysValue, hrsValue, minsValue, secsValue, delayValue)
+
+
     return "Nada"
 
 # Gallery Provide & Update
@@ -89,5 +96,25 @@ def photoGalleryBuild():
     imgData = map(os.path.basename, sorted(glob.glob(path + "*jpg")))
     return jsonify({"imgArray": imgData})
 
+# -------------------- SocketIO -----------------------------------
+@socketio.on('my event', namespace='/test')
+def test_message(message):
+    emit('my response', {'data': message['data']})
+
+# @socketio.on('my broadcast event', namespace='/test')
+# def test_message(message):
+#     emit('my response', {'data': message['data']}, broadcast=True)
+
+@socketio.on('connect', namespace='/test')
+def test_connect():
+    emit('my response', {'data': 'Connected'})
+
+@socketio.on('disconnect', namespace='/test')
+def test_disconnect():
+    print('Client disconnected')
+
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
+    # app.run(debug=False, host='0.0.0.0')
+    socketio.run(app, host='0.0.0.0')
+    # socketio.run(app, host='0.0.0.0', policy_server=False)
+    

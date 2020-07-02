@@ -14,3 +14,11 @@ Streaming server resource: https://www.pyimagesearch.com/2015/03/30/accessing-th
 boostrap toggle:
 http://www.bootstraptoggle.com/
 
+Animate CSS:
+https://animate.style/
+
+Python WebSocket using Flask Socket IO
+https://www.includehelp.com/python/implementation-of-websocket-using-flask-socket-io-in-python.aspx
+** socketio = SocketIO(app, async_mode='threading') 
+Above code needed to prevent lagging of AJAX calls while polling happens. Found solution here: https://stackoverflow.com/questions/34581255/python-flask-socketio-send-message-from-thread-not-always-working
+also an older version CDN used for socket.io https://cdnjs.com/libraries/socket.io/1.7.4

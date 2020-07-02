@@ -1,5 +1,22 @@
 $(document).ready(function() {
 
+    // --------------------- Flask WebSocketIO Start -------------------------------
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+    print('connection socket: ', socket)
+    socket.on('my response', function(msg) {
+        $('#timelapseData').append('<p>Received: ' + msg.data + '</p>');
+    });
+    // $('form#emit').submit(function(event) {
+    //     socket.emit('my event', {data: $('#emit_data').val()});
+    //     return false;
+    // });
+    // $('form#broadcast').submit(function(event) {
+    //     socket.emit('my broadcast event', {data: $('#broadcast_data').val()});
+    //     return false;
+    // });
+
+    // --------------------- Flask WebSocketIO END -------------------------------
+
     // Add listener to gallery images to launch modal
     $(document).on('click', ".galleryImg", function(e){ 
         e.preventDefault();
