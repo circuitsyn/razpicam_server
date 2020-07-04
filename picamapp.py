@@ -14,6 +14,8 @@ app.config['SECRET_KEY'] = 'include_help!'
 socketio = SocketIO(app, async_mode='threading')
 # os.urandom(12)
 
+shotsTaken = 0
+
 vc = cv2.VideoCapture(0)
 vc.set(3, 1280)
 vc.set(4, 720)
@@ -83,10 +85,21 @@ def TimelapseSubmit():
     minsValue = int(request.form['minsValue'])
     secsValue = int(request.form['secsValue'])
     delayValue = int(request.form['delayValue'])
-    print(int(delayValue) * 4)
     print(daysValue, hrsValue, minsValue, secsValue, delayValue)
 
+    # Calculate sum number of seconds for timelapse
+    sumTime = (daysValue * 24 * 60 * 60) + (hrsValue * 60 * 60) + (minsValue * 60) + (secsValue)
+    # calculate total frames to be taken
+    total = int(sumTime/delayValue, 0)
+    remaining = total - shotsTaken
 
+    dataUpdate = {
+        'framesRemaining': remaining,
+        'totalFrames': total
+    }
+
+    print(dataUpdate)
+    
     return "Nada"
 
 # Gallery Provide & Update
@@ -97,21 +110,48 @@ def photoGalleryBuild():
     return jsonify({"imgArray": imgData})
 
 # -------------------- SocketIO -----------------------------------
-@socketio.on('my event', namespace='/test')
-def test_message(message):
-    emit('my response', {'data': message['data']})
+@socketio.on('my event', namespace='/razData')
+def handle_json(json):
+    print('received json: ' + str(json))
 
-# @socketio.on('my broadcast event', namespace='/test')
+    daysValue = int(json['daysValue'])
+    hrsValue = int(json['hrsValue'])
+    minsValue = int(json['minsValue'])
+    secsValue = int(json['secsValue'])
+    delayValue = int(json['delayValue'])
+    # print('values',daysValue, hrsValue, minsValue, secsValue, delayValue)
+
+    # Calculate sum number of seconds for timelapse
+    sumTime = (daysValue * 24 * 60 * 60) + (hrsValue * 60 * 60) + (minsValue * 60) + (secsValue)
+    # calculate total frames to be taken
+    total = int(sumTime/delayValue)
+    remaining = total - shotsTaken
+
+    dataUpdate = {
+        'framesRemaining': remaining,
+        'totalFrames': total
+    }
+
+    print(dataUpdate)
+
+
+    emit('timelapseUpdate', dataUpdate)
+
+# @socketio.on('my broadcast event', namespace='/razData')
 # def test_message(message):
 #     emit('my response', {'data': message['data']}, broadcast=True)
 
-@socketio.on('connect', namespace='/test')
+@socketio.on('connect', namespace='/razData')
 def test_connect():
     emit('my response', {'data': 'Connected'})
 
-@socketio.on('disconnect', namespace='/test')
+@socketio.on('disconnect', namespace='/razData')
 def test_disconnect():
     print('Client disconnected')
+
+# @socketio.on('timelapseUpdate', namespace='/razData')
+# def timelapse_data_update(dataUpdate):
+#     emit('my response', {'data': dataUpdate['data']})
 
 if __name__ == '__main__':
     # app.run(debug=False, host='0.0.0.0')

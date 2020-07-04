@@ -1,15 +1,79 @@
 $(document).ready(function() {
 
     // --------------------- Flask WebSocketIO Start -------------------------------
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-    print('connection socket: ', socket)
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/razData');
+
+    // Connected status to console
     socket.on('my response', function(msg) {
-        $('#timelapseData').append('<p>Received: ' + msg.data + '</p>');
+        console.log('socket.io server connected');
     });
+
+    socket.on('timelapseUpdate', function(timeData) {
+        console.log('timeData returned: ', timeData);
+        $('#timelapseData').empty();
+        let frameCount = $('<p>');
+        let remaingFrames = $('<p>');
+        $(frameCount).addClass('frameText');
+        $(remaingFrames).addClass('frameText');
+        $(frameCount).text("Total Frames: " + timeData.totalFrames);
+        $(remaingFrames).text("Remaining Frames: " + timeData.framesRemaining);
+        $('#timelapseData').append(frameCount,remaingFrames);
+    });
+
+    $(function() { $("#timelapseBtn").click(function (e) { 
     // $('form#emit').submit(function(event) {
-    //     socket.emit('my event', {data: $('#emit_data').val()});
-    //     return false;
-    // });
+
+        // gather values
+        let daysVal = $('#daysInput').val();
+        let hrsVal = $('#hrsInput').val();
+        let minsVal = $('#minsInput').val();
+        let secsVal = $('#secsInput').val();
+        let delayVal = $('#delayInput').val();
+
+        // no data catch
+        if (!daysVal || daysVal == "") {
+            daysVal = 0;
+        }
+
+        if (!hrsVal || hrsVal == "") {
+            hrsVal = 0;
+        }
+
+        if (!minsVal || minsVal == "") {
+            minsVal = 0;
+        }
+
+        if (!secsVal || secsVal == "") {
+            secsVal = 0;
+        }
+
+        if (!delayVal || delayVal == "") {
+            delayVal = 0;
+        }
+
+        console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal, 'delayInput: ', delayVal);
+
+        socket.emit('my event', {
+            daysValue: daysVal,
+            hrsValue: hrsVal,
+            minsValue: minsVal,
+            secsValue: secsVal,
+            delayValue: delayVal  
+        });
+
+        // trigger snap button animation
+        // select and grab snap photo button by id tag
+        const element = document.querySelector('#timelapseBtn');
+        // add animation class to snap button via stored id element
+        element.classList.add('animate__animated', 'animate__rubberBand');
+        // Add detection to remove animation class
+        element.addEventListener('animationend', () => {
+            element.classList.remove('animate__animated', 'animate__rubberBand');
+        });
+
+        return false;
+        });
+    });
     // $('form#broadcast').submit(function(event) {
     //     socket.emit('my broadcast event', {data: $('#broadcast_data').val()});
     //     return false;
@@ -58,58 +122,58 @@ $(document).ready(function() {
     });
 
     // Add event listener to id #timelapseBtn and trigger a snapshot
-    $(function() { $("#timelapseBtn").click(function (e) { 
-        e.preventDefault();
+    // $(function() { $("#timelapseBtn").click(function (e) { 
+    //     e.preventDefault();
         
-        // gather values
-        let daysVal = $('#daysInput').val();
-        let hrsVal = $('#hrsInput').val();
-        let minsVal = $('#minsInput').val();
-        let secsVal = $('#secsInput').val();
-        let delayVal = $('#delayInput').val();
+    //     // gather values
+    //     let daysVal = $('#daysInput').val();
+    //     let hrsVal = $('#hrsInput').val();
+    //     let minsVal = $('#minsInput').val();
+    //     let secsVal = $('#secsInput').val();
+    //     let delayVal = $('#delayInput').val();
 
-        // no data catch
-        if (!daysVal || daysVal == "") {
-            daysVal = 0;
-        }
+    //     // no data catch
+    //     if (!daysVal || daysVal == "") {
+    //         daysVal = 0;
+    //     }
 
-        if (!hrsVal || hrsVal == "") {
-            hrsVal = 0;
-        }
+    //     if (!hrsVal || hrsVal == "") {
+    //         hrsVal = 0;
+    //     }
 
-        if (!minsVal || minsVal == "") {
-            minsVal = 0;
-        }
+    //     if (!minsVal || minsVal == "") {
+    //         minsVal = 0;
+    //     }
 
-        if (!secsVal || secsVal == "") {
-            secsVal = 0;
-        }
+    //     if (!secsVal || secsVal == "") {
+    //         secsVal = 0;
+    //     }
 
-        if (!delayVal || delayVal == "") {
-            delayVal = 0;
-        }
+    //     if (!delayVal || delayVal == "") {
+    //         delayVal = 0;
+    //     }
 
-        console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal, 'delayInput: ', delayVal);
+    //     console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal, 'delayInput: ', delayVal);
 
-        $.post('/TimelapseSubmit', {
-            daysValue: daysVal,
-            hrsValue: hrsVal,
-            minsValue: minsVal,
-            secsValue: secsVal,
-            delayValue: delayVal  
-        });
+    //     $.post('/TimelapseSubmit', {
+    //         daysValue: daysVal,
+    //         hrsValue: hrsVal,
+    //         minsValue: minsVal,
+    //         secsValue: secsVal,
+    //         delayValue: delayVal  
+    //     });
 
-        // trigger snap button animation
-        // select and grab snap photo button by id tag
-        const element = document.querySelector('#timelapseBtn');
-        // add animation class to snap button via stored id element
-        element.classList.add('animate__animated', 'animate__rubberBand');
-        // Add detection to remove animation class
-        element.addEventListener('animationend', () => {
-            element.classList.remove('animate__animated', 'animate__rubberBand');
-        });
-    });
-    });
+    //     // trigger snap button animation
+    //     // select and grab snap photo button by id tag
+    //     const element = document.querySelector('#timelapseBtn');
+    //     // add animation class to snap button via stored id element
+    //     element.classList.add('animate__animated', 'animate__rubberBand');
+    //     // Add detection to remove animation class
+    //     element.addEventListener('animationend', () => {
+    //         element.classList.remove('animate__animated', 'animate__rubberBand');
+    //     });
+    // });
+    // });
 
     // gallery creation
     populateGallery = (photosObj) => {
