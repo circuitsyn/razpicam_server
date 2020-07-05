@@ -10,18 +10,30 @@ $(document).ready(function() {
 
     socket.on('timelapseUpdate', function(timeData) {
         console.log('timeData returned: ', timeData);
-        $('#timelapseData').empty();
+        
+        // create total frame section
+        $('#totalFrameSec').empty();
         let frameCount = $('<p>');
-        let remaingFrames = $('<p>');
         $(frameCount).addClass('frameText');
-        $(remaingFrames).addClass('frameText');
         $(frameCount).text("Total Frames: " + timeData.totalFrames);
+        
+        // create remaining frame section
+        $('#remainingFrameSec').empty();
+        let remaingFrames = $('<p>');
+        $(remaingFrames).addClass('frameText');
         $(remaingFrames).text("Remaining Frames: " + timeData.framesRemaining);
-        $('#timelapseData').append(frameCount,remaingFrames);
+
+        // create loading image section
+        $('#timeImgSec').empty();
+        let loadingImg = $('<img>');
+        $(loadingImg).attr("id","timelapseLoadingGif");
+        loadingImg.attr('src', '../static/imgs/loadingcat.gif');
+        loadingImg.attr('alt', 'loading toaster cat');
+        
+        $('#timelapseData').append(frameCount,remaingFrames, loadingImg);
     });
 
     $(function() { $("#timelapseBtn").click(function (e) { 
-    // $('form#emit').submit(function(event) {
 
         // gather values
         let daysVal = $('#daysInput').val();

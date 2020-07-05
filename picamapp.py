@@ -14,8 +14,6 @@ app.config['SECRET_KEY'] = 'include_help!'
 socketio = SocketIO(app, async_mode='threading')
 # os.urandom(12)
 
-shotsTaken = 0
-
 vc = cv2.VideoCapture(0)
 vc.set(3, 1280)
 vc.set(4, 720)
@@ -56,16 +54,23 @@ def PhotoSnap():
     height = vc.get(4)
     print("width: ", width, "height: ", height)
 
-    if rval:
-        # code to write frame to jpeg with timestamp as filename
-        isWritten = cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg', frame)
-        if isWritten:
-            print('image successfully written to ' + '/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg' )
-        else:
-            print('img write failed')
+    snapPath = '/home/pi/shared/3DPrinterCam/static/imgs/captures/'
+
+    # check if capture path exists, create if not
+    if not os.path.exists(snapPath):
+        os.mkdir(snapPath)
+    
     else:
-        print('rval - false - check photo snap else section of code', rval)
-    # vc.release()
+        if rval:
+            # code to write frame to jpeg with timestamp as filename
+            isWritten = cv2.imwrite(snapPath + curTime +'.jpg', frame)
+            if isWritten:
+                print('image successfully written to ' + '/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg' )
+            else:
+                print('img write failed')
+        else:
+            print('rval - false - check photo snap else section of code', rval)
+
     return "Nothing"
 
 # Delete Photo Function
@@ -78,29 +83,29 @@ def PhotoDelete():
     return "Nothing"
 
 # Timelapse
-@app.route('/TimelapseSubmit', methods=['POST'])
-def TimelapseSubmit():
-    daysValue = int(request.form['daysValue'])
-    hrsValue = int(request.form['hrsValue'])
-    minsValue = int(request.form['minsValue'])
-    secsValue = int(request.form['secsValue'])
-    delayValue = int(request.form['delayValue'])
-    print(daysValue, hrsValue, minsValue, secsValue, delayValue)
+# @app.route('/TimelapseSubmit', methods=['POST'])
+# def TimelapseSubmit():
+#     daysValue = int(request.form['daysValue'])
+#     hrsValue = int(request.form['hrsValue'])
+#     minsValue = int(request.form['minsValue'])
+#     secsValue = int(request.form['secsValue'])
+#     delayValue = int(request.form['delayValue'])
+#     print(daysValue, hrsValue, minsValue, secsValue, delayValue)
 
-    # Calculate sum number of seconds for timelapse
-    sumTime = (daysValue * 24 * 60 * 60) + (hrsValue * 60 * 60) + (minsValue * 60) + (secsValue)
-    # calculate total frames to be taken
-    total = int(sumTime/delayValue, 0)
-    remaining = total - shotsTaken
+#     # Calculate sum number of seconds for timelapse
+#     sumTime = (daysValue * 24 * 60 * 60) + (hrsValue * 60 * 60) + (minsValue * 60) + (secsValue)
+#     # calculate total frames to be taken
+#     total = int(sumTime/delayValue, 0)
+#     remaining = total - shotsTaken
 
-    dataUpdate = {
-        'framesRemaining': remaining,
-        'totalFrames': total
-    }
+#     dataUpdate = {
+#         'framesRemaining': remaining,
+#         'totalFrames': total
+#     }
 
-    print(dataUpdate)
+#     print(dataUpdate)
     
-    return "Nada"
+    # return "Nada"
 
 # Gallery Provide & Update
 @app.route('/photoGalleryBuild', methods=['GET', 'POST'])
@@ -109,33 +114,97 @@ def photoGalleryBuild():
     imgData = map(os.path.basename, sorted(glob.glob(path + "*jpg")))
     return jsonify({"imgArray": imgData})
 
+# -------------------- functions ----------------------------------
+def timelapse_func(numFrames, delay):
+
+    timelapseSnapPath = '/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'
+
+    # check if capture path exists, create if not
+    if not os.path.exists(timelapseSnapPath):
+        os.mkdir(timelapseSnapPath)
+    
+    else:
+
+        for i in range(numFrames):
+            #set a variable with the current time to use as image file name
+            curTime = (time.strftime('timelapse' + "%m%j%y" + "_" + "%H%M_%S"))
+            #take a photo, give it a name, and resize it to fit into Parse
+            rval, frame = vc.read()
+
+            if rval:
+                # code to write frame to jpeg with timestamp as filename
+                isWritten = cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'+ curTime +'.jpg', frame)
+                if isWritten:
+                    print('image successfully written to ' + '/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'+ curTime +'.jpg' )
+                else:
+                    print('img write failed')
+            else:
+                print('rval - false - check photo snap else section of code', rval)
+            print("timelapse snap")
+            # wait 5 seconds
+            time.sleep(delay)
+
 # -------------------- SocketIO -----------------------------------
 @socketio.on('my event', namespace='/razData')
 def handle_json(json):
-    print('received json: ' + str(json))
+    # append loading gif to page
 
+    print('received json: ' + str(json))
+    shotsTaken = 0
     daysValue = int(json['daysValue'])
     hrsValue = int(json['hrsValue'])
     minsValue = int(json['minsValue'])
     secsValue = int(json['secsValue'])
     delayValue = int(json['delayValue'])
-    # print('values',daysValue, hrsValue, minsValue, secsValue, delayValue)
 
-    # Calculate sum number of seconds for timelapse
+    # calculate sum number of seconds for timelapse
     sumTime = (daysValue * 24 * 60 * 60) + (hrsValue * 60 * 60) + (minsValue * 60) + (secsValue)
+
     # calculate total frames to be taken
-    total = int(sumTime/delayValue)
-    remaining = total - shotsTaken
+    totalFrames = int(sumTime/delayValue)
 
-    dataUpdate = {
-        'framesRemaining': remaining,
-        'totalFrames': total
-    }
+    # >> looping timelapse functionality <<
+    timelapseSnapPath = '/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'
 
-    print(dataUpdate)
+    # check if capture path exists, create if not
+    if not os.path.exists(timelapseSnapPath):
+        os.mkdir(timelapseSnapPath)
+    
+    else:
 
+        for i in range(totalFrames):
+            #set a variable with the current time to use as image file name
+            curTime = (time.strftime('timelapse' + "%m%j%y" + "_" + "%H%M_%S"))
+            #take a photo, give it a name, and resize it to fit into Parse
+            rval, frame = vc.read()
 
-    emit('timelapseUpdate', dataUpdate)
+            if rval:
+                # code to write frame to jpeg with timestamp as filename
+                isWritten = cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'+ curTime +'.jpg', frame)
+                shotsTaken += 1
+                remainingFrames = totalFrames - shotsTaken
+                if isWritten:
+                    print('image successfully written to ' + '/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'+ curTime +'.jpg' )
+                else:
+                    print('img write failed')
+            else:
+                print('rval - false - check photo snap else section of code', rval)
+            print("timelapse snap")
+
+            # build data json object
+            dataUpdate = {
+                'framesRemaining': remainingFrames,
+                'totalFrames': totalFrames
+            }
+
+            emit('timelapseUpdate', dataUpdate)
+
+            # wait 5 seconds
+            time.sleep(delayValue)
+    
+    # empty div with gif
+
+    
 
 # @socketio.on('my broadcast event', namespace='/razData')
 # def test_message(message):
