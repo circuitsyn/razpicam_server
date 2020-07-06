@@ -10,27 +10,65 @@ $(document).ready(function() {
 
     socket.on('timelapseUpdate', function(timeData) {
         console.log('timeData returned: ', timeData);
+
+        // Disable fields and submit button until finished
+        if (timeData.loadStatus === "True") {
+            $('#daysInput').attr('disabled', true);
+            $('#hrsInput').attr('disabled', true);
+            $('#minsInput').attr('disabled', true);
+            $('#secsInput').attr('disabled', true);
+            $('#delayInput').attr('disabled', true);
+            $('#timelapseBtn').attr('disabled', true);
+        }
+        else {
+            $('#daysInput').attr('disabled', false);
+            $('#hrsInput').attr('disabled', false);
+            $('#minsInput').attr('disabled', false);
+            $('#secsInput').attr('disabled', false);
+            $('#delayInput').attr('disabled', false);
+            $('#timelapseBtn').attr('disabled', false);
+        }
         
         // create total frame section
-        $('#totalFrameSec').empty();
-        let frameCount = $('<p>');
-        $(frameCount).addClass('frameText');
-        $(frameCount).text("Total Frames: " + timeData.totalFrames);
+        if (timeData.loadStatus === "True") {
+            $('#totalFrameSec').empty();
+            let frameCount = $('<p>');
+            $(frameCount).addClass('frameText');
+            $(frameCount).text("Total Frames: " + timeData.totalFrames);
+            $('#totalFrameSec').append(frameCount);
+        }
+        else {
+            $('#totalFrameSec').empty();
+        }
+
         
         // create remaining frame section
-        $('#remainingFrameSec').empty();
-        let remaingFrames = $('<p>');
-        $(remaingFrames).addClass('frameText');
-        $(remaingFrames).text("Remaining Frames: " + timeData.framesRemaining);
+        if (timeData.loadStatus === "True") {
+            $('#remainingFrameSec').empty();
+            let remaingFrames = $('<p>');
+            $(remaingFrames).addClass('frameText');
+            $(remaingFrames).text("Remaining Frames: " + timeData.framesRemaining);
+            $('#remainingFrameSec').append(remaingFrames);
+        }
+        else {
+            $('#remainingFrameSec').empty();
+        }
 
         // create loading image section
-        $('#timeImgSec').empty();
-        let loadingImg = $('<img>');
-        $(loadingImg).attr("id","timelapseLoadingGif");
-        loadingImg.attr('src', '../static/imgs/loadingcat.gif');
-        loadingImg.attr('alt', 'loading toaster cat');
+        if (timeData.loadStatus === "True") {
+            $('#timeImgSec').empty();
+            let loadingImg = $('<img>');
+            $(loadingImg).attr("id","timelapseLoadingGif");
+            loadingImg.attr('src', './static/imgs/loadingcat.gif');
+            loadingImg.attr('alt', 'loading toaster cat');
+            $('#timeImgSec').append(loadingImg);
+        }
+        else {
+            $('#timeImgSec').empty();
+        }
         
-        $('#timelapseData').append(frameCount,remaingFrames, loadingImg);
+        
+        // $('#timelapseData').append(frameCount, remaingFrames, loadingImg);
     });
 
     $(function() { $("#timelapseBtn").click(function (e) { 

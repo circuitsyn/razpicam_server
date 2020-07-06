@@ -163,44 +163,53 @@ def handle_json(json):
     # calculate total frames to be taken
     totalFrames = int(sumTime/delayValue)
 
-    # >> looping timelapse functionality <<
-    timelapseSnapPath = '/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'
+    timelapseSnapPath = '/home/pi/shared/3DPrinterCam/static/imgs/timelapse'
 
     # check if capture path exists, create if not
     if not os.path.exists(timelapseSnapPath):
         os.mkdir(timelapseSnapPath)
     
-    else:
 
-        for i in range(totalFrames):
-            #set a variable with the current time to use as image file name
-            curTime = (time.strftime('timelapse' + "%m%j%y" + "_" + "%H%M_%S"))
-            #take a photo, give it a name, and resize it to fit into Parse
-            rval, frame = vc.read()
+    # >> looping timelapse functionality <<
+    for i in range(totalFrames):
+        #set a variable with the current time to use as image file name
+        curTimelapseTime = (time.strftime('timelapse' + "%m%j%y" + "_" + "%H%M_%S"))
+        #take a photo, give it a name, and resize it to fit into Parse
+        rval, frame = vc.read()
 
-            if rval:
-                # code to write frame to jpeg with timestamp as filename
-                isWritten = cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'+ curTime +'.jpg', frame)
-                shotsTaken += 1
-                remainingFrames = totalFrames - shotsTaken
-                if isWritten:
-                    print('image successfully written to ' + '/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'+ curTime +'.jpg' )
-                else:
-                    print('img write failed')
+        if rval:
+            # code to write frame to jpeg with timestamp as filename
+            isWritten = cv2.imwrite('/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'+ curTimelapseTime +'.jpg', frame)
+            shotsTaken += 1
+            remainingFrames = totalFrames - shotsTaken
+            if isWritten:
+                print('image successfully written to ' + '/home/pi/shared/3DPrinterCam/static/imgs/timelapse/'+ curTimelapseTime +'.jpg' )
             else:
-                print('rval - false - check photo snap else section of code', rval)
-            print("timelapse snap")
+                print('img write failed')
+        else:
+            print('rval - false - check photo snap else section of code', rval)
+        print("timelapse snap")
 
-            # build data json object
-            dataUpdate = {
-                'framesRemaining': remainingFrames,
-                'totalFrames': totalFrames
+        # build data json object
+        dataUpdate = {
+            'framesRemaining': remainingFrames,
+            'totalFrames': totalFrames,
+            'loadStatus': 'True'
+        }
+        print('data timelapse object: ', dataUpdate)
+        emit('timelapseUpdate', dataUpdate)
+
+        # wait 5 seconds
+        time.sleep(delayValue)
+
+    print("Finished Timelapse!")
+    dataUpdate = {
+                'framesRemaining': 0,
+                'totalFrames': 0,
+                'loadStatus': 'False'
             }
-
-            emit('timelapseUpdate', dataUpdate)
-
-            # wait 5 seconds
-            time.sleep(delayValue)
+    print('data timelapse object (outside): ', dataUpdate)
+    emit('timelapseUpdate', dataUpdate)
     
     # empty div with gif
 
