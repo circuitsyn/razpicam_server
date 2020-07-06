@@ -98,12 +98,12 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Delay</span>
                     </div>
-                    <input id="delayInput" type="number" placeholder="00 (secs)" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm">
+                    <input id="delayInput" type="number" placeholder="00 (secs)" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm" data-trigger="focus" data-toggle="popover" title="Delay Size?" data-content="Is the delay size larger than the total of seconds requested? Make sure to double check!">
                   </div>
                   <div id="timelapseData" class="row">
                     <!-- Timelapse Submit Button -->
                     <div class="col-3">
-                      <button id="timelapseBtn" type="submit" class="timelapseBtn btn btn-sm btn-secondary">Start Timelapse</button>
+                      <button id="timelapseBtn" type="submit" class="timelapseBtn btn btn-sm btn-secondary" data-trigger="focus" data-toggle="popover" title="Check Your Seconds" data-content="Make sure that you have a seconds count larger than the delay and your timelapse has a seconds value greater than zero.">Start Timelapse</button>
                     </div>
                     <!-- Timelapse Frame Data to be inserted here -->
                     <div id="totalFrameSec" class="col-3">

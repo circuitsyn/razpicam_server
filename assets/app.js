@@ -72,7 +72,7 @@ $(document).ready(function() {
     });
 
     $(function() { $("#timelapseBtn").click(function (e) { 
-
+        e.preventDefault();
         // gather values
         let daysVal = $('#daysInput').val();
         let hrsVal = $('#hrsInput').val();
@@ -80,7 +80,7 @@ $(document).ready(function() {
         let secsVal = $('#secsInput').val();
         let delayVal = $('#delayInput').val();
 
-        // no data catch
+        // no data string to integer catch
         if (!daysVal || daysVal == "") {
             daysVal = 0;
         }
@@ -101,27 +101,47 @@ $(document).ready(function() {
             delayVal = 0;
         }
 
-        console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal, 'delayInput: ', delayVal);
+        // checks for no data or lack of enough timelapse data
+        let sumInput = daysVal + hrsVal + minsVal + secsVal
+        let divCheck = sumInput / delayVal
+        console.log("sumInput", sumInput)
+        console.log("divCheck", divCheck)
+        if((sumInput > 0) && (divCheck > 1)) {
 
-        socket.emit('my event', {
-            daysValue: daysVal,
-            hrsValue: hrsVal,
-            minsValue: minsVal,
-            secsValue: secsVal,
-            delayValue: delayVal  
-        });
+            console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal, 'delayInput: ', delayVal);
 
-        // trigger snap button animation
-        // select and grab snap photo button by id tag
-        const element = document.querySelector('#timelapseBtn');
-        // add animation class to snap button via stored id element
-        element.classList.add('animate__animated', 'animate__rubberBand');
-        // Add detection to remove animation class
-        element.addEventListener('animationend', () => {
-            element.classList.remove('animate__animated', 'animate__rubberBand');
-        });
+            socket.emit('my event', {
+                daysValue: daysVal,
+                hrsValue: hrsVal,
+                minsValue: minsVal,
+                secsValue: secsVal,
+                delayValue: delayVal  
+            });
 
-        return false;
+            // trigger snap button animation
+            // select and grab snap photo button by id tag
+            const element = document.querySelector('#timelapseBtn');
+            // add animation class to snap button via stored id element
+            element.classList.add('animate__animated', 'animate__rubberBand');
+            // Add detection to remove animation class
+            element.addEventListener('animationend', () => {
+                element.classList.remove('animate__animated', 'animate__rubberBand');
+            });
+
+            return false;
+        }
+        else {
+            console.log('deciding popover')
+            // conditional to trigger needed popover feedback 
+            if(sumInput == 0){
+                console.log('timelapse button popover')
+                $('#timelapseBtn').popover("show");
+            } 
+            else if(divCheck < 1 || isNaN(divCheck)) {
+                console.log('delay input field popover')
+                $('#delayInput').popover("show");
+            }
+        }
         });
     });
     // $('form#broadcast').submit(function(event) {
@@ -154,7 +174,6 @@ $(document).ready(function() {
     // Add event listener to id snapBtn and trigger a snapshot
     $(function() { $("#snapBtn").click(function (e) { 
         e.preventDefault();
-    // $("#snapBtn").on('click', function (e) { 
         console.log('event triggered');
         $.post('/PhotoSnap', {}, function(result) {
             grabGalleryData();
@@ -170,60 +189,6 @@ $(document).ready(function() {
         });    
     });
     });
-
-    // Add event listener to id #timelapseBtn and trigger a snapshot
-    // $(function() { $("#timelapseBtn").click(function (e) { 
-    //     e.preventDefault();
-        
-    //     // gather values
-    //     let daysVal = $('#daysInput').val();
-    //     let hrsVal = $('#hrsInput').val();
-    //     let minsVal = $('#minsInput').val();
-    //     let secsVal = $('#secsInput').val();
-    //     let delayVal = $('#delayInput').val();
-
-    //     // no data catch
-    //     if (!daysVal || daysVal == "") {
-    //         daysVal = 0;
-    //     }
-
-    //     if (!hrsVal || hrsVal == "") {
-    //         hrsVal = 0;
-    //     }
-
-    //     if (!minsVal || minsVal == "") {
-    //         minsVal = 0;
-    //     }
-
-    //     if (!secsVal || secsVal == "") {
-    //         secsVal = 0;
-    //     }
-
-    //     if (!delayVal || delayVal == "") {
-    //         delayVal = 0;
-    //     }
-
-    //     console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal, 'delayInput: ', delayVal);
-
-    //     $.post('/TimelapseSubmit', {
-    //         daysValue: daysVal,
-    //         hrsValue: hrsVal,
-    //         minsValue: minsVal,
-    //         secsValue: secsVal,
-    //         delayValue: delayVal  
-    //     });
-
-    //     // trigger snap button animation
-    //     // select and grab snap photo button by id tag
-    //     const element = document.querySelector('#timelapseBtn');
-    //     // add animation class to snap button via stored id element
-    //     element.classList.add('animate__animated', 'animate__rubberBand');
-    //     // Add detection to remove animation class
-    //     element.addEventListener('animationend', () => {
-    //         element.classList.remove('animate__animated', 'animate__rubberBand');
-    //     });
-    // });
-    // });
 
     // gallery creation
     populateGallery = (photosObj) => {

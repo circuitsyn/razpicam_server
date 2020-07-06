@@ -111,7 +111,7 @@ def PhotoDelete():
 @app.route('/photoGalleryBuild', methods=['GET', 'POST'])
 def photoGalleryBuild():
     path = "/home/pi/shared/3DPrinterCam/static/imgs/captures/"
-    imgData = map(os.path.basename, sorted(glob.glob(path + "*jpg")))
+    imgData = map(os.path.basename, sorted(glob.glob(path + "*jpg"), reverse=True))
     return jsonify({"imgArray": imgData})
 
 # -------------------- functions ----------------------------------
@@ -189,31 +189,24 @@ def handle_json(json):
         else:
             print('rval - false - check photo snap else section of code', rval)
         print("timelapse snap")
+        
+        # control boolean status of loading gif by tracking remaining frames
+        if(remainingFrames > 0):
+            loadStatus = 'True'
+        else:
+            loadStatus = 'False'
+            print("Finished Timelapse!")
 
         # build data json object
         dataUpdate = {
             'framesRemaining': remainingFrames,
             'totalFrames': totalFrames,
-            'loadStatus': 'True'
+            'loadStatus': loadStatus
         }
-        print('data timelapse object: ', dataUpdate)
         emit('timelapseUpdate', dataUpdate)
 
         # wait 5 seconds
-        time.sleep(delayValue)
-
-    print("Finished Timelapse!")
-    dataUpdate = {
-                'framesRemaining': 0,
-                'totalFrames': 0,
-                'loadStatus': 'False'
-            }
-    print('data timelapse object (outside): ', dataUpdate)
-    emit('timelapseUpdate', dataUpdate)
-    
-    # empty div with gif
-
-    
+        time.sleep(delayValue)    
 
 # @socketio.on('my broadcast event', namespace='/razData')
 # def test_message(message):
@@ -234,5 +227,4 @@ def test_disconnect():
 if __name__ == '__main__':
     # app.run(debug=False, host='0.0.0.0')
     socketio.run(app, host='0.0.0.0')
-    # socketio.run(app, host='0.0.0.0', policy_server=False)
     
