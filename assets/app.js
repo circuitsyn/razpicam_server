@@ -230,15 +230,15 @@ $(document).ready(function() {
         let bulkArr = JSON.parse(localStorage.getItem("photoArr"));
         pageListArr = bulkArr.slice(begin, end);
         populateGallery();
+        check();
         // check();
     }
 
     // Gallery creation
     populateGallery = () => {
-        
+
+        // Clear and build image gallery
         $('#photoGallery').empty();
-        // let filenameARR = JSON.parse(localStorage.getItem("photoArr"));
-        console.log('pageListArr', pageListArr);
         for(i=0; i < pageListArr.length; i++) {
             let startDiv = $('<div>');
             $(startDiv).addClass('col-3');
@@ -249,7 +249,39 @@ $(document).ready(function() {
             $(startDiv).append(startImg);
             $('#photoGallery').append(startDiv);
         }
+
+        // Populate pages index for nav 
     }
+
+    // Check # of pages to disble button status
+    check = () => {
+        $("#next").disabled = currentPage == numberOfPages ? true : false;
+        $("#previous").disabled = currentPage == 1 ? true : false;
+        $("#first").disabled = currentPage == 1 ? true : false;
+        $("#last").disabled = currentPage == numberOfPages ? true : false;
+    }
+
+    // Gallery navigation buttons
+    nextPage = () => {
+        currentPage += 1;
+        loadPageList();
+    }
+    
+    previousPage = () => {
+        currentPage -= 1;
+        loadPageList();
+    }
+    
+    firstPage = () => {
+        currentPage = 1;
+        loadPageList();
+    }
+    
+    lastPage = () => {
+        currentPage = numOfPages;
+        loadPageList();
+    }
+
 
     
         

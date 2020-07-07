@@ -126,6 +126,33 @@
           <div id="photoGallery" class="row">
 
           </div>
+          <div id="photoNav" class="row">
+            <nav class="m-auto" aria-label="Page navigation example">
+              <ul class="pagination">
+                <li class="page-item">
+                  <a class="page-link" onclick="firstPage()" href="#" aria-label="First">
+                    <span aria-hidden="true">First</span>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" onclick="previousPage()" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li class="page-item"><a id="currentPG" class="page-link" href="#">1</a></li>
+                <li class="page-item">
+                  <a class="page-link" onclick="nextPage()" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" onclick="lastPage()" href="#" aria-label="Last">
+                    <span aria-hidden="true">Last</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
