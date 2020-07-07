@@ -1,5 +1,12 @@
 $(document).ready(function() {
 
+    // Global variables
+    let currentPage = 1;
+    let numPerPage = 32;
+    let numOfPages = 0;
+    let pageListArr = [];
+
+
     // --------------------- Flask WebSocketIO Start -------------------------------
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/razData');
 
@@ -131,7 +138,7 @@ $(document).ready(function() {
             return false;
         }
         else {
-            console.log('deciding popover')
+            console.log('deciding popover');
             // conditional to trigger needed popover feedback 
             if(sumInput == 0){
                 console.log('timelapse button popover')
@@ -190,33 +197,61 @@ $(document).ready(function() {
     });
     });
 
-    // gallery creation
-    populateGallery = (photosObj) => {
+    // Grab photo data
+    grabGalleryData = () => {
+        $.getJSON('/photoGalleryBuild',
+        function(data) {
+            if (data || data.imgArray) {
+                storePhotoData(data.imgArray);
+            }
+            else {
+                console.log('NoData');
+            }
+    })}
+
+    // Store array locally
+    storePhotoData = (photoArr) => {
+        localStorage.setItem("photoArr", JSON.stringify(photoArr));
+        // populateGallery();
+        getNumOfPages();
+    }
+
+    // Get variables and calculate range
+    getNumOfPages = () => {
+        lenOfArr = (JSON.parse(localStorage.getItem("photoArr"))).length;
+        numOfPages = Math.ceil(lenOfArr / numPerPage);
+        loadPageList();
+    }
+
+    // Slice array
+    loadPageList = () => {
+        let begin = ((currentPage - 1) * numPerPage);
+        let end = begin + numPerPage;
+        let bulkArr = JSON.parse(localStorage.getItem("photoArr"));
+        pageListArr = bulkArr.slice(begin, end);
+        populateGallery();
+        // check();
+    }
+
+    // Gallery creation
+    populateGallery = () => {
+        
         $('#photoGallery').empty();
-        let filenameARR = photosObj.imgArray;
-        for(i=0; i < filenameARR.length; i++) {
+        // let filenameARR = JSON.parse(localStorage.getItem("photoArr"));
+        console.log('pageListArr', pageListArr);
+        for(i=0; i < pageListArr.length; i++) {
             let startDiv = $('<div>');
             $(startDiv).addClass('col-3');
             let startImg = $('<img>');
             $(startImg).addClass('galleryImg img-thumbnail img-fluid mb-3');
-            $(startImg).attr('src', '../static/imgs/captures/' + filenameARR[i]);
+            $(startImg).attr('src', '../static/imgs/captures/' + pageListArr[i]);
             $(startImg).attr('alt', 'printer snapshot');
             $(startDiv).append(startImg);
             $('#photoGallery').append(startDiv);
         }
     }
 
-    // grab photo data
-    grabGalleryData = () => {
-        $.getJSON('/photoGalleryBuild',
-        function(data) {
-            if (data || data.imgArray) {
-                populateGallery(data);
-            }
-            else {
-                console.log('NoData');
-            }
-    })}
+    
         
 
     grabGalleryData();
