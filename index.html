@@ -130,25 +130,19 @@
             <nav class="m-auto" aria-label="Page navigation example">
               <ul class="pagination">
                 <li class="page-item">
-                  <a class="page-link" onclick="firstPage()" href="#" aria-label="First">
-                    <span aria-hidden="true">First</span>
-                  </a>
+                  <input id="first" type="button" class="page-link" onclick="firstPage()" value="First" aria-label="First"/>
                 </li>
                 <li class="page-item">
-                  <a class="page-link" onclick="previousPage()" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>
-                <li class="page-item"><a id="currentPG" class="page-link" href="#">1</a></li>
-                <li class="page-item">
-                  <a class="page-link" onclick="nextPage()" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
+                  <input id="previous" type="button" class="page-link" onclick="previousPage()" value="&laquo;" aria-label="Previous"/>
                 </li>
                 <li class="page-item">
-                  <a class="page-link" onclick="lastPage()" href="#" aria-label="Last">
-                    <span aria-hidden="true">Last</span>
-                  </a>
+                  <input id="currentPG" type="button" class="page-link" value="1" aria-label="page number"/>
+                </li>
+                <li class="page-item">
+                  <input id="next" type="button" class="page-link" onclick="nextPage()" value="&raquo;" aria-label="Next"/>
+                </li>
+                <li class="page-item">
+                  <input id="last" type="button" class="page-link" onclick="lastPage()" value="Last" aria-label="Last"/>
                 </li>
               </ul>
             </nav>

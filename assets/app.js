@@ -237,6 +237,9 @@ $(document).ready(function() {
     // Gallery creation
     populateGallery = () => {
 
+        // Establish Current Page
+        $('#currentPG').val(currentPage)
+
         // Clear and build image gallery
         $('#photoGallery').empty();
         for(i=0; i < pageListArr.length; i++) {
@@ -255,10 +258,28 @@ $(document).ready(function() {
 
     // Check # of pages to disble button status
     check = () => {
-        $("#next").disabled = currentPage == numberOfPages ? true : false;
-        $("#previous").disabled = currentPage == 1 ? true : false;
-        $("#first").disabled = currentPage == 1 ? true : false;
-        $("#last").disabled = currentPage == numberOfPages ? true : false;
+        if(currentPage == numOfPages){
+            $("#next").prop("disabled", true);
+        }
+        else {
+            $("#next").prop("disabled", false);
+        }
+
+        if(currentPage == 1){
+            $("#previous").prop("disabled", true);
+            $("#first").prop("disabled", true)
+        }
+        else {
+            $("#previous").prop("disabled", false);
+            $("#first").prop("disabled", false);
+        }
+
+        if(currentPage == numOfPages){
+            $("#last").prop("disabled", true);
+        }
+        else {
+            $("#last").prop("disabled", false);
+        }
     }
 
     // Gallery navigation buttons
@@ -282,11 +303,7 @@ $(document).ready(function() {
         loadPageList();
     }
 
-
-    
-        
-
+    // Run at page load
     grabGalleryData();
-
 
 });
