@@ -113,7 +113,8 @@ $(document).ready(function() {
         let divCheck = sumInput / delayVal
         console.log("sumInput", sumInput)
         console.log("divCheck", divCheck)
-        if((sumInput > 0) && (divCheck > 1)) {
+        console.log('infinite check: ', isFinite(divCheck), !isFinite(divCheck) )
+        if((sumInput > 0) && (divCheck > 1) && (isFinite(divCheck))) {
 
             console.log('Days: ', daysVal, 'hrs: ', hrsVal, 'mins: ', minsVal, 'secs: ', secsVal, 'delayInput: ', delayVal);
 
@@ -140,14 +141,17 @@ $(document).ready(function() {
         else {
             console.log('deciding popover');
             // conditional to trigger needed popover feedback 
-            if(sumInput == 0){
+            if(sumInput == 0 && !isFinite(divCheck)){
                 console.log('timelapse button popover')
-                $('#timelapseBtn').popover("show");
+                $('#timelapseBtn').popover("toggle");
             } 
-            else if(divCheck < 1 || isNaN(divCheck)) {
+            else if(sumInput != 0 && divCheck < 1 && isFinite(divCheck)) {
                 console.log('delay input field popover')
-                $('#delayInput').popover("show");
+                $('#delayDiv').popover("toggle");
             }
+            // else if(isFinite(divCheck)) {
+            //     console.log('infinity check')
+            // }
         }
         });
     });
