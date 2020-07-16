@@ -126,7 +126,45 @@
               </div>
             </div>
           </form>
+
+          <!-- Temp/Humidity Section -->
+          <div class="row dataArea text-center mb-3">
+            <div class="col-12">
+              <div class="row">
+                <div class="p-3 col-2 sensorArea">
+                  <img class="sensorIcon m-1" src="../static/imgs/sensor.png" alt="humidity" />
+                  <p class="font-weight-bolder m-0">
+                    Sensor:
+                  </p>
+                  <p id="humData" class="m-0">
+                    1
+                  </p>
+                </div>
+                <div class="p-3 col">
+                  <img class="dataIcons m-3" src="../static/imgs/humidity.png" alt="humidity" />
+                  <p id="humData">
+                    loading...
+                  </p>
+                </div>
+                <div class="p-3 col">
+                  <img class="dataIcons m-3" src="../static/imgs/thermometer.png" alt="temperature" />
+                  <p id="tempData">
+                    loading...
+                  </p>
+                </div>
+                <div class="p-3 col">
+                  <img class="dataIcons m-3" src="../static/imgs/battery.png" alt="battery" />
+                  <p id="tempData">
+                    loading...
+                  </p>
+                </div>
+              </div>
+              
+            </div>
+            
+          </div>
         </div>
+        
         <!-- Photo Callery Column 2 -->
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
           <div id="photoGallery" class="row">

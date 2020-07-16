@@ -40,6 +40,25 @@
   background-color: rgb(48,48,48);
 }
 
+.dataArea {
+  border-radius: 25px;
+  border: solid 2px black;
+}
+
+.dataIcons {
+  max-width: 10vh;
+  height: auto;
+}
+
+.sensorIcon {
+  max-width: 4vh;
+  height: auto;
+}
+
+.sensorArea {
+  border-right: solid;
+}
+
 /* pagination nav styling */
 #first, #previous, #next, #last, #currentPG {
   background-color: white;
