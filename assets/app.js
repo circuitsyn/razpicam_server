@@ -144,10 +144,12 @@ $(document).ready(function() {
             if(sumInput == 0 && !isFinite(divCheck)){
                 console.log('timelapse button popover')
                 $('#timelapseBtn').popover("toggle");
+                setTimeout(function(){ $('#timelapseBtn').popover("toggle"); }, 4000);
             } 
-            else if(sumInput != 0 && divCheck < 1 && isFinite(divCheck)) {
+            else if((sumInput != 0) && (divCheck < 1) && (isFinite(divCheck))) {
                 console.log('delay input field popover')
                 $('#delayDiv').popover("toggle");
+                setTimeout(function(){ $('#delayDiv').popover("toggle"); }, 4000);
             }
             // else if(isFinite(divCheck)) {
             //     console.log('infinity check')

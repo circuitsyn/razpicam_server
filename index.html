@@ -35,7 +35,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand font-weight-bolder" href="#">
         <img src="../static/imgs/3d-printer.png" width="30" height="30" class="d-inline-block align-top" alt="3d printer logo" loading="lazy">
         3D Printer Viewing Station
       </a>
@@ -99,8 +99,8 @@
                       <input id="secsInput" type="number" placeholder="00" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm">
                     </div>
                     <!-- Delay -->
-                    <div class="input-group input-group-sm mb-3 col-6">
-                      <div id="delayDiv" class="input-group-prepend" data-trigger="focus" data-toggle="popover" title="Division Check!" data-content="Is the delay size larger than the total of seconds requested? Only entered timelapse seconds and not the delay? Make sure to double check!">
+                    <div id="delayDiv" class="input-group input-group-sm mb-3 col-6 popover-dismiss" data-trigger="focus" data-toggle="popover" title="Division Check!" data-content="Is the delay size larger than the total of seconds requested? Only entered timelapse seconds and not the delay? Make sure to double check!">
+                      <div class="input-group-prepend" >
                         <span class="input-group-text font-weight-bolder" aria-describedby="inputGroup-sizing-sm" >Delay</span>
                       </div>
                       <input id="delayInput" type="number" placeholder="00 (secs)" class="form-control" aria-label="timelapse seconds input" aria-describedby="inputGroup-sizing-sm">
@@ -109,7 +109,7 @@
                   <div id="timelapseData" class="row w-100">
                     <!-- Timelapse Submit Button -->
                     <div class="col-3">
-                      <button id="timelapseBtn" type="submit" class="p-2 timelapseBtn font-weight-bold btn btn-sm btn-secondary" data-trigger="focus" data-toggle="popover" title="Check Your Seconds" data-content="Make sure that you have a seconds count larger than the delay and your timelapse has a seconds value greater than zero.">Start Timelapse</button>
+                      <button id="timelapseBtn" type="submit" class="p-2 timelapseBtn font-weight-bold btn btn-sm btn-secondary popover-dismiss" data-trigger="focus" data-toggle="popover" title="Check Your Seconds" data-content="Make sure that you have a seconds count larger than the delay and your timelapse has a seconds value greater than zero.">Start Timelapse</button>
                     </div>
                     <!-- Timelapse Frame Data to be inserted here -->
                     <div id="totalFrameSec" class="col-3">

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, Response, jsonify, request
 from flask_socketio import SocketIO, emit
 import picamera
+import SensorCode
 import json
 import cv2
 import socket
@@ -82,37 +83,14 @@ def PhotoDelete():
     print("confirmed deletion")
     return "Nothing"
 
-# Timelapse
-# @app.route('/TimelapseSubmit', methods=['POST'])
-# def TimelapseSubmit():
-#     daysValue = int(request.form['daysValue'])
-#     hrsValue = int(request.form['hrsValue'])
-#     minsValue = int(request.form['minsValue'])
-#     secsValue = int(request.form['secsValue'])
-#     delayValue = int(request.form['delayValue'])
-#     print(daysValue, hrsValue, minsValue, secsValue, delayValue)
-
-#     # Calculate sum number of seconds for timelapse
-#     sumTime = (daysValue * 24 * 60 * 60) + (hrsValue * 60 * 60) + (minsValue * 60) + (secsValue)
-#     # calculate total frames to be taken
-#     total = int(sumTime/delayValue, 0)
-#     remaining = total - shotsTaken
-
-#     dataUpdate = {
-#         'framesRemaining': remaining,
-#         'totalFrames': total
-#     }
-
-#     print(dataUpdate)
-    
-    # return "Nada"
-
 # Gallery Provide & Update
 @app.route('/photoGalleryBuild', methods=['GET', 'POST'])
 def photoGalleryBuild():
     path = "/home/pi/shared/3DPrinterCam/static/imgs/captures/"
     imgData = map(os.path.basename, sorted(glob.glob(path + "*jpg"), reverse=True))
-    return jsonify({"imgArray": imgData})
+    # print('imgdata: ', list(imgData))
+    
+    return jsonify({"imgArray": list(imgData)})
 
 # -------------------- functions ----------------------------------
 def timelapse_func(numFrames, delay):
@@ -147,8 +125,7 @@ def timelapse_func(numFrames, delay):
 # -------------------- SocketIO -----------------------------------
 @socketio.on('my event', namespace='/razData')
 def handle_json(json):
-    # append loading gif to page
-
+    
     print('received json: ' + str(json))
     shotsTaken = 0
     daysValue = int(json['daysValue'])

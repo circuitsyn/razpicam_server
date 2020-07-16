@@ -40,6 +40,22 @@
   background-color: rgb(48,48,48);
 }
 
+/* pagination nav styling */
+#first, #previous, #next, #last, #currentPG {
+  background-color: white;
+  color:darkgray;
+}
+
+#first:hover, #previous:hover, #next:hover, #last:hover {
+  background-color: lightgray;
+  color: black;
+}
+
+#first:disabled, #previous:disabled, #next:disabled, #last:disabled {
+  background-color: darkgray;
+  color: white;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera
 .example::-webkit-scrollbar {
 display: none;
