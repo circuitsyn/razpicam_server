@@ -10,11 +10,27 @@ $(document).ready(function() {
     // --------------------- Flask WebSocketIO Start -------------------------------
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/razData');
 
+    // Temp/Humidity Sensor Data REQUEST
+    $(function() { $("#sensorTempHumSwitch").click(function (e) { 
+        e.preventDefault();
+        console.log('requesting sensor data...');
+        socket.emit('tempHumSensorRequest', {
+            message: 'sensor data please'
+        });
+      
+    });
+
+    // Temp/Humidity Sensor Data REPLY
+    socket.on('tempHumSensorUpdate', function(data) {
+        console.log('Sensor data update', data);
+    });
+
     // Connected status to console
     socket.on('my response', function(msg) {
         console.log('socket.io server connected');
     });
 
+    // Timelapse update info
     socket.on('timelapseUpdate', function(timeData) {
         console.log('timeData returned: ', timeData);
 
@@ -218,7 +234,6 @@ $(document).ready(function() {
     // Store array locally
     storePhotoData = (photoArr) => {
         localStorage.setItem("photoArr", JSON.stringify(photoArr));
-        // populateGallery();
         getNumOfPages();
     }
 
@@ -237,7 +252,6 @@ $(document).ready(function() {
         pageListArr = bulkArr.slice(begin, end);
         populateGallery();
         check();
-        // check();
     }
 
     // Gallery creation

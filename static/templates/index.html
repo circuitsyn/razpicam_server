@@ -54,7 +54,7 @@
               <div class="snapFrame p-3 d-flex justify-content-between">
                 <!-- <input type="checkbox" checked data-toggle="toggle" data-size="small" data-style="ios" data-onstyle="danger"> -->
                 <label class="snapLabel font-weight-bolder" for="snapBtn">Take a screen grab from the stream:</label>
-                <button id="snapBtn" type="submit" class="pl-3 pr-3 snapBtn font-weight-bolder btn btn-sm btn-secondary">Snap Photo</button>
+                <button id="snapBtn" type="submit" class="pl-3 pr-3 snapBtn font-weight-bolder btn btn-sm btn-dark">Snap Photo</button>
               </div>
             </div>
           </div>
@@ -109,7 +109,7 @@
                   <div id="timelapseData" class="row w-100">
                     <!-- Timelapse Submit Button -->
                     <div class="col-3">
-                      <button id="timelapseBtn" type="submit" class="p-2 timelapseBtn font-weight-bold btn btn-sm btn-secondary popover-dismiss" data-trigger="focus" data-toggle="popover" title="Check Your Seconds" data-content="Make sure that you have a seconds count larger than the delay and your timelapse has a seconds value greater than zero.">Start Timelapse</button>
+                      <button id="timelapseBtn" type="submit" class="p-2 timelapseBtn font-weight-bold btn btn-sm btn-dark popover-dismiss" data-trigger="focus" data-toggle="popover" title="Check Your Seconds" data-content="Make sure that you have a seconds count larger than the delay and your timelapse has a seconds value greater than zero.">Start Timelapse</button>
                     </div>
                     <!-- Timelapse Frame Data to be inserted here -->
                     <div id="totalFrameSec" class="col-3">
@@ -128,10 +128,19 @@
           </form>
 
           <!-- Temp/Humidity Section -->
-          <div class="row dataArea text-center mb-3">
+          <div class="row dataArea mb-3 p-2">
+            <div class="col">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="sensorTempHumSwitch" data-toggle="collapse" data-target="#tempHumDiv" aria-expanded="false" aria-controls="collapseExample">
+                <label class="custom-control-label" for="sensorTempHumSwitch">Toggle to activate sensors</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="tempHumDiv" class="collapse row dataArea text-center mb-3">
             <div class="col-12">
-              <div class="row">
-                <div class="p-3 col-2 sensorArea">
+              <div class="row d-flex justify-content-between">
+                <div class="p-3 col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 sensorArea">
                   <img class="sensorIcon m-1" src="../static/imgs/sensor.png" alt="humidity" />
                   <p class="font-weight-bolder m-0">
                     Sensor:
@@ -140,29 +149,28 @@
                     1
                   </p>
                 </div>
-                <div class="p-3 col">
+                <div class="p-3 col-3">
                   <img class="dataIcons m-3" src="../static/imgs/humidity.png" alt="humidity" />
                   <p id="humData">
                     loading...
                   </p>
                 </div>
-                <div class="p-3 col">
+                <div class="p-3 col-3">
                   <img class="dataIcons m-3" src="../static/imgs/thermometer.png" alt="temperature" />
                   <p id="tempData">
                     loading...
                   </p>
                 </div>
-                <div class="p-3 col">
+                <div class="p-3 col-3">
                   <img class="dataIcons m-3" src="../static/imgs/battery.png" alt="battery" />
                   <p id="tempData">
                     loading...
                   </p>
                 </div>
               </div>
-              
             </div>
-            
           </div>
+          
         </div>
         
         <!-- Photo Callery Column 2 -->
@@ -194,15 +202,7 @@
         </div>
       </div>
     </div>
-      <!-- <div class="row mt-3">
-        <div class="col-6">
-          <div class="snapFrame p-3"> -->
-            <!-- <input type="checkbox" checked data-toggle="toggle" data-size="small" data-style="ios" data-onstyle="danger"> -->
-            <!-- <label for="snapBtn">Take a screen grab from the stream:</label>
-            <button id="snapBtn" type="button" class="snapBtn btn btn-secondary m-2">Snap Photo</button>
-          </div>
-        </div>
-      </div> -->
+      
 
 
     <!-- Optional JavaScript -->

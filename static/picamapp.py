@@ -2,6 +2,7 @@ from flask import Flask, render_template, Response, jsonify, request
 from flask_socketio import SocketIO, emit
 import picamera
 import SensorCode
+from bleson import get_provider, Observer, UUID16
 import json
 import cv2
 import socket
@@ -125,7 +126,7 @@ def timelapse_func(numFrames, delay):
 # -------------------- SocketIO -----------------------------------
 @socketio.on('my event', namespace='/razData')
 def handle_json(json):
-    
+
     print('received json: ' + str(json))
     shotsTaken = 0
     daysValue = int(json['daysValue'])
@@ -197,9 +198,20 @@ def test_connect():
 def test_disconnect():
     print('Client disconnected')
 
-# @socketio.on('timelapseUpdate', namespace='/razData')
-# def timelapse_data_update(dataUpdate):
-#     emit('my response', {'data': dataUpdate['data']})
+@socketio.on('tempHumSensorUpdate', namespace='/razData')
+def sensor_data(json):
+
+    adapter = get_provider().get_adapter()
+
+    observer = Observer(adapter)
+    observer.on_advertising_data = SensorCode.on_advertisement
+    print('observer data?', observer.on_advertising_data)
+    observer.start()
+    time.sleep(2)
+    observer.stop()
+    # emit('tempHumSensorUpdate', {'data': 'Connected'})
+
+
 
 if __name__ == '__main__':
     # app.run(debug=False, host='0.0.0.0')

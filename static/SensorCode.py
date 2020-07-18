@@ -39,7 +39,7 @@ def decode_temp_in_f(encoded_data):
 # Decode H5075 percent humidity
 def decode_humidity(encoded_data):
     return format(((encoded_data % 1000) / 10), FORMAT_PRECISION)
-
+  
 
 def print_values(mac):
     govee_device = govee_devices[mac]
@@ -63,7 +63,7 @@ RSSI: {govee_device['rssi']}"
 
 # On BLE advertisement callback
 def on_advertisement(advertisement):
-    log.debug(advertisement)
+    # log.debug(advertisement)
 
     if advertisement.address.address.startswith(GOVEE_BT_mac_OUI_PREFIX):
         mac = advertisement.address.address
@@ -72,10 +72,13 @@ def on_advertisement(advertisement):
             govee_devices[mac] = {}
         if H5075_UPDATE_UUID16 in advertisement.uuid16s:
             # HACK:  Proper decoding is done in bleson > 0.10
-            print(advertisement.name)
+            # print(advertisement.name)
             name = advertisement.name
 
             encoded_data = int(advertisement.mfg_data.hex()[6:12], 16)
+            print('encoded_data: ', encoded_data)
+            print('govee_devices', govee_devices)
+            print('govee_devices2', govee_devices[mac])
             battery = int(advertisement.mfg_data.hex()[12:14], 16)
             govee_devices[mac]["address"] = mac
             govee_devices[mac]["name"] = name
@@ -87,31 +90,32 @@ def on_advertisement(advertisement):
             govee_devices[mac]["humidity"] = decode_humidity(encoded_data)
 
             govee_devices[mac]["battery"] = battery
+            print('govee_devices_end', govee_devices)
             print_values(mac)
-        if advertisement.rssi is not None and advertisement.rssi != 0:
-            govee_devices[mac]["rssi"] = advertisement.rssi
-            print_rssi(mac)
+        # if advertisement.rssi is not None and advertisement.rssi != 0:
+        #     govee_devices[mac]["rssi"] = advertisement.rssi
+        #     print_rssi(mac)
 
-        log.debug(govee_devices[mac])
+        # log.debug(govee_devices[mac])
 
 
 # ###########################################################################
 
 
-adapter = get_provider().get_adapter()
+# adapter = get_provider().get_adapter()
 
-observer = Observer(adapter)
-observer.on_advertising_data = on_advertisement
+# observer = Observer(adapter)
+# observer.on_advertising_data = on_advertisement
 
-try:
-    while True:
-        observer.start()
-        sleep(2)
-        observer.stop()
-except KeyboardInterrupt:
-    try:
-        observer.stop()
-        sys.exit(0)
-    except SystemExit:
-        observer.stop()
-        os._exit(0)
+# try:
+#     while True:
+#         observer.start()
+#         sleep(2)
+#         observer.stop()
+# except KeyboardInterrupt:
+#     try:
+#         observer.stop()
+#         sys.exit(0)
+#     except SystemExit:
+#         observer.stop()
+#         os._exit(0)
