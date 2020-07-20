@@ -198,9 +198,9 @@ def test_connect():
 def test_disconnect():
     print('Client disconnected')
 
-@socketio.on('tempHumSensorUpdate', namespace='/razData')
+@socketio.on('sensorUpdateRequest', namespace='/razData')
 def sensor_data(json):
-
+    print('sensor message:', json)
     adapter = get_provider().get_adapter()
 
     observer = Observer(adapter)
@@ -209,7 +209,7 @@ def sensor_data(json):
     observer.start()
     time.sleep(2)
     observer.stop()
-    # emit('tempHumSensorUpdate', {'data': 'Connected'})
+    emit('tempHumSensorUpdate', {'data': 'Connected'})
 
 
 

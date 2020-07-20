@@ -9,20 +9,30 @@ $(document).ready(function() {
 
     // --------------------- Flask WebSocketIO Start -------------------------------
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/razData');
+    sensorTempHumSwitch
+    // Temp/Humidity Sensor Data
+    $(function() { $("#timelapseBtn").click(function (e) { 
+        if($("#timelapseBtn").is(':checked')){
+            // if checked ignore duplicate request action
+            console.log('already checked')
+            socket.emit('sensorUpdateRequest', {
+                msg: 'requesting sensor data',
+                sensorStatus: False
+            });
+        }
+        else {
+            // unchecked request sensor data
+            socket.emit('sensorUpdateRequest', {
+                msg: 'requesting sensor data',
+                sensorStatus: True
+            }); 
+        }
 
-    // Temp/Humidity Sensor Data REQUEST
-    $(function() { $("#sensorTempHumSwitch").click(function (e) { 
-        e.preventDefault();
-        console.log('requesting sensor data...');
-        socket.emit('tempHumSensorRequest', {
-            message: 'sensor data please'
-        });
-      
+    // socket sensor data 
+    socket.on('tempHumSensorUpdate', function(sensorData) {
+        console.log('tempHumSensorUpdate returned: ', sensorData);
     });
-
-    // Temp/Humidity Sensor Data REPLY
-    socket.on('tempHumSensorUpdate', function(data) {
-        console.log('Sensor data update', data);
+    });
     });
 
     // Connected status to console
