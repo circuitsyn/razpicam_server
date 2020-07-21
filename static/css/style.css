@@ -1,0 +1,93 @@
+.snapFrame {
+    border-radius: 25px;
+    border: solid 2px #343a40;
+}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+  .toggle.ios .toggle-handle { border-radius: 20px; }
+
+  #snapBtn, #timelapseBtn {
+    border-radius: 20px !important;
+  }
+
+  #printerView {
+    max-width: 100%;
+    height: auto;
+    border-radius: 25px;
+  }
+
+  .galleryImg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  #photoGallery {
+    overflow-x: hidden;
+  }
+
+  .snapLabel {
+    margin: auto auto auto 0;
+  }
+  
+  #loadingGif {
+    border-radius: 25px;
+  }
+
+  #timelapseLoadingGif {
+    height: 80px;
+    width: auto;
+    border-radius: 25px;
+    background-color: rgb(48,48,48);
+  }
+
+  .dataArea {
+    border-radius: 25px;
+    border: solid 2px #343a40;
+  }
+
+  .dataIcons {
+    max-width: 80%;
+    height: auto;
+  }
+
+  .sensorIcon {
+    max-width: 4vh;
+    height: auto;
+  }
+
+  .sensorArea {
+    background-color: #343a40;
+    color: white;
+    border-radius: 20px;
+  }
+
+  /* pagination nav styling */
+  #first, #previous, #next, #last, #currentPG {
+    background-color: white;
+    color:darkgray;
+  }
+
+  #first:hover, #previous:hover, #next:hover, #last:hover {
+    background-color: lightgray;
+    color: black;
+  }
+
+  #first:disabled, #previous:disabled, #next:disabled, #last:disabled {
+    background-color: darkgray;
+    color: white;
+  }
+
+  .custom-control-input:checked~.custom-control-label::before {
+    background-color: green !important;
+    border-color: green !important;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera
+  .example::-webkit-scrollbar {
+  display: none;
+  }
+
+  /* Hide scrollbar for IE and Edge */  
+  /* .example {
+  -ms-overflow-style: none;
+  } */
