@@ -206,12 +206,13 @@ def sensor_data(json):
     observer = Observer(adapter)
     observer.on_advertising_data = SensorCode.on_advertisement
     print('observer data?', observer.on_advertising_data)
+    print('variable print before start', SensorCode.sensorData)
     observer.start()
+    print('variable print after start', SensorCode.sensorData)
     time.sleep(2)
+    print('variable print after sleep', SensorCode.sensorData)
     observer.stop()
     emit('tempHumSensorUpdate', {'data': 'Connected'})
-
-
 
 if __name__ == '__main__':
     # app.run(debug=False, host='0.0.0.0')

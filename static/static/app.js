@@ -11,20 +11,22 @@ $(document).ready(function() {
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/razData');
     sensorTempHumSwitch
     // Temp/Humidity Sensor Data
-    $(function() { $("#timelapseBtn").click(function (e) { 
-        if($("#timelapseBtn").is(':checked')){
+    $(function() { $("#sensorTempHumSwitch").click(function (e) { 
+        // e.preventDefault();
+        console.log('toggle clicked')
+        if($("#sensorTempHumSwitch").is(':checked')){
             // if checked ignore duplicate request action
             console.log('already checked')
             socket.emit('sensorUpdateRequest', {
                 msg: 'requesting sensor data',
-                sensorStatus: False
+                sensorStatus: 'False'
             });
         }
         else {
             // unchecked request sensor data
             socket.emit('sensorUpdateRequest', {
                 msg: 'requesting sensor data',
-                sensorStatus: True
+                sensorStatus: 'True'
             }); 
         }
 
