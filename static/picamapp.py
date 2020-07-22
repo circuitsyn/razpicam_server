@@ -1,15 +1,22 @@
+#!/usr/bin/env python3
+
 from flask import Flask, render_template, Response, jsonify, request
 from flask_socketio import SocketIO, emit
 import picamera
-import SensorCode
+# import SensorCode
 from bleson import get_provider, Observer, UUID16
+from bleson.logger import log, set_level, ERROR, DEBUG
 import json
 import cv2
 import socket
 import io
 import os
+import sys
 import glob
 import time
+
+# Disable warnings for sensor gathering
+set_level(ERROR)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'include_help!'
@@ -20,6 +27,7 @@ vc = cv2.VideoCapture(0)
 vc.set(3, 1280)
 vc.set(4, 720)
 
+# -------------------- @app Routes Start -----------------------------------
 @app.route('/')
 def index():
     """Video streaming"""
@@ -93,6 +101,78 @@ def photoGalleryBuild():
     
     return jsonify({"imgArray": list(imgData)})
 
+# -------------------- @app Routes End-----------------------------------
+# -------------------- Govee Sensor Start-----------------------------------
+# # Uncomment for debug log level
+# set_level(DEBUG)
+
+# https://macaddresschanger.com/bluetooth-mac-lookup/A4%3AC1%3A38
+# OUI Prefix	Company
+# A4:C1:38	Telink Semiconductor (Taipei) Co. Ltd.
+GOVEE_BT_mac_OUI_PREFIX = "A4:C1:38"
+H5075_UPDATE_UUID16 = UUID16(0xEC88)
+govee_devices = {}
+FORMAT_PRECISION = ".2f"
+
+### Govee Sensor Data Conversion Functions ###
+# Decode H5075 Temperature into degrees Celcius
+def decode_temp_in_c(encoded_data):
+    return format((encoded_data / 10000), FORMAT_PRECISION)
+
+
+# Decode H5075 Temperature into degrees Fahrenheit
+def decode_temp_in_f(encoded_data):
+    return format((((encoded_data / 10000) * 1.8) + 32), FORMAT_PRECISION)
+
+
+# Decode H5075 percent humidity
+def decode_humidity(encoded_data):
+    return format(((encoded_data % 1000) / 10), FORMAT_PRECISION)
+  
+
+def print_values(mac):
+    govee_device = govee_devices[mac]
+    # print(govee_device)
+    print(
+        f"{govee_device['name']} ({govee_device['address']}) - \
+Temperature {govee_device['tempInC']}C / {govee_device['tempInF']}F  - \
+Humidity: {govee_device['humidity']}% - \
+Battery:  {govee_device['battery']}%"
+    )
+
+# On BLE advertisement callback
+def on_advertisement(advertisement):
+    # log.debug(advertisement)
+
+    if advertisement.address.address.startswith(GOVEE_BT_mac_OUI_PREFIX):
+        mac = advertisement.address.address
+
+        if mac not in govee_devices:
+            govee_devices[mac] = {}
+        if H5075_UPDATE_UUID16 in advertisement.uuid16s:
+            # HACK:  Proper decoding is done in bleson > 0.10
+            # print(advertisement.name)
+            name = advertisement.name
+
+            encoded_data = int(advertisement.mfg_data.hex()[6:12], 16)
+            print('encoded_data: ', encoded_data)
+            print('govee_devices', govee_devices)
+            print('govee_devices[mac]', govee_devices[mac])
+            battery = int(advertisement.mfg_data.hex()[12:14], 16)
+            govee_devices[mac]["address"] = mac
+            govee_devices[mac]["name"] = name
+            govee_devices[mac]["mfg_data"] = advertisement.mfg_data
+            govee_devices[mac]["data"] = encoded_data
+
+            govee_devices[mac]["tempInC"] = decode_temp_in_c(encoded_data)
+            govee_devices[mac]["tempInF"] = decode_temp_in_f(encoded_data)
+            govee_devices[mac]["humidity"] = decode_humidity(encoded_data)
+
+            govee_devices[mac]["battery"] = battery
+            print('govee_devices_end', govee_devices)  
+        print_values(mac)
+
+# -------------------- Govee Sensor End-----------------------------------
 # -------------------- functions ----------------------------------
 def timelapse_func(numFrames, delay):
 
@@ -123,7 +203,7 @@ def timelapse_func(numFrames, delay):
             # wait 5 seconds
             time.sleep(delay)
 
-# -------------------- SocketIO -----------------------------------
+# -------------------- SocketIO Start -----------------------------------
 @socketio.on('my event', namespace='/razData')
 def handle_json(json):
 
@@ -200,19 +280,21 @@ def test_disconnect():
 
 @socketio.on('sensorUpdateRequest', namespace='/razData')
 def sensor_data(json):
-    print('sensor message:', json)
-    adapter = get_provider().get_adapter()
 
-    observer = Observer(adapter)
-    observer.on_advertising_data = SensorCode.on_advertisement
-    print('observer data?', observer.on_advertising_data)
-    print('variable print before start', SensorCode.sensorData)
-    observer.start()
-    print('variable print after start', SensorCode.sensorData)
-    time.sleep(2)
-    print('variable print after sleep', SensorCode.sensorData)
-    observer.stop()
-    emit('tempHumSensorUpdate', {'data': 'Connected'})
+    print('sensor message:', json)
+    if(json['sensorStatus'] == 'True'):
+        adapter = get_provider().get_adapter()
+
+        observer = Observer(adapter)
+        observer.on_advertising_data = on_advertisement
+        observer.start()
+        time.sleep(2)
+        observer.stop()
+        emit('tempHumSensorUpdate', {'data': govee_devices})
+    else:
+        emit('tempHumSensorUpdate', {'data': 'data disabled'})
+
+# -------------------- SocketIO End -----------------------------------
 
 if __name__ == '__main__':
     # app.run(debug=False, host='0.0.0.0')

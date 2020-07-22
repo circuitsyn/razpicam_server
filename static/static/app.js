@@ -9,20 +9,39 @@ $(document).ready(function() {
 
     // --------------------- Flask WebSocketIO Start -------------------------------
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/razData');
-    sensorTempHumSwitch
+
     // Temp/Humidity Sensor Data
-    $(function() { $("#sensorTempHumSwitch").click(function (e) { 
-        // e.preventDefault();
-        console.log('toggle clicked')
-        if($("#sensorTempHumSwitch").is(':checked')){
+    $(function() { $("#sensorTempHumButton").click(function (e) { 
+        e.preventDefault();
+        console.log('button clicked');
+        let = clickedStatus = $('#sensorTempHumButton').attr("data-clicked");
+        if(clickedStatus == 'true'){
+            // change button click state
+            $('#sensorTempHumButton').attr("data-clicked", "false");
+            $('#sensorTempHumButton').text("Click to activate sensors!");
+
+            // clear GIF area
+            $('#sensorGifArea').empty();
+
             // if checked ignore duplicate request action
-            console.log('already checked')
+            console.log('already checked');
             socket.emit('sensorUpdateRequest', {
                 msg: 'requesting sensor data',
                 sensorStatus: 'False'
             });
         }
         else {
+            // change button click state
+            $('#sensorTempHumButton').attr("data-clicked", "true");
+            $('#sensorTempHumButton').text("Sensors active!");
+
+            // build img for sensor connecting gif
+            let sensorgifImg = $('<img>');
+            $(sensorgifImg).attr("src", "./static/imgs/connect.gif");
+            $(sensorgifImg).attr("alt", "sensor data loading");
+            $(sensorgifImg).addClass("sensorgifImg")
+            $('#sensorGifArea').append(sensorgifImg);
+
             // unchecked request sensor data
             socket.emit('sensorUpdateRequest', {
                 msg: 'requesting sensor data',

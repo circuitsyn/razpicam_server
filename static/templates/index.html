@@ -54,7 +54,7 @@
               <div class="snapFrame p-3 d-flex justify-content-between">
                 <!-- <input type="checkbox" checked data-toggle="toggle" data-size="small" data-style="ios" data-onstyle="danger"> -->
                 <label class="snapLabel font-weight-bolder" for="snapBtn">Take a screen grab from the stream:</label>
-                <button id="snapBtn" type="submit" class="pl-3 pr-3 snapBtn font-weight-bolder btn btn-sm btn-dark">Snap Photo</button>
+                <button id="snapBtn" type="submit" class="pl-3 pr-3 font-weight-bolder btn btn-sm btn-dark">Snap Photo</button>
               </div>
             </div>
           </div>
@@ -129,11 +129,12 @@
 
           <!-- Temp/Humidity Section -->
           <div class="row dataArea mb-3 p-2">
-            <div class="col">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="sensorTempHumSwitch" data-toggle="collapse" data-target="#tempHumDiv" aria-expanded="false" aria-controls="collapseExample">
-                <label class="custom-control-label" for="sensorTempHumSwitch">Toggle to activate sensors</label>
-              </div>
+            <div class="col-10">
+              <button id="sensorTempHumButton" type="button" data-clicked="false" class="btn btn-dark btn-sm pl-3 pr-3 font-weight-bolder" data-toggle="collapse" data-target="#tempHumDiv" aria-expanded="false" aria-controls="collapseExample">Activate Sensors</button>
+              <label id="sensorBtnLabel" for="sensorTempHumButton">Click to activate sensors!</label>
+            </div>
+            <div id="sensorGifArea" class="col-2">
+
             </div>
           </div>
 
