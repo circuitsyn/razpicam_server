@@ -6,7 +6,7 @@
 .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
   .toggle.ios .toggle-handle { border-radius: 20px; }
 
-  #snapBtn, #timelapseBtn {
+  #snapBtn, #timelapseBtn, #sensorTempHumButton {
     border-radius: 20px !important;
   }
 
@@ -77,9 +77,9 @@
     color: white;
   }
 
-  .custom-control-input:checked~.custom-control-label::before {
-    background-color: green !important;
-    border-color: green !important;
+  .sensorgifImg {
+    height: 30px;
+    width: auto;
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera

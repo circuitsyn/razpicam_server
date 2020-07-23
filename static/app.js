@@ -9,20 +9,54 @@ $(document).ready(function() {
 
     // --------------------- Flask WebSocketIO Start -------------------------------
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/razData');
-    sensorTempHumSwitch
+
     // Temp/Humidity Sensor Data
-    $(function() { $("#sensorTempHumSwitch").click(function (e) { 
-        // e.preventDefault();
-        console.log('toggle clicked')
-        if($("#sensorTempHumSwitch").is(':checked')){
+    $(function() { $("#sensorTempHumButton").click(function (e) { 
+        e.preventDefault();
+        console.log('button clicked');
+        let = clickedStatus = $('#sensorTempHumButton').attr("data-clicked");
+        // trigger button animation
+        // select and grab sensorTempHumButton button by id tag
+        const element = document.querySelector('#sensorTempHumButton');
+        // add animation class to sensorTempHumButton button via stored id element
+        element.classList.add('animate__animated', 'animate__rubberBand');
+        // Add detection to remove animation class
+        element.addEventListener('animationend', () => {
+            element.classList.remove('animate__animated', 'animate__rubberBand');
+        });
+
+        // clear container div
+        $('#sensorDataArea').empty();
+
+        // conditional to establish which message to send
+        if(clickedStatus == 'true'){
+            // change button click state
+            $('#sensorTempHumButton').attr("data-clicked", "false");
+            $('#sensorTempHumButton').text("Click to activate sensors!");
+
+            // clear GIF area
+            $('#sensorGifArea').empty();
+
             // if checked ignore duplicate request action
-            console.log('already checked')
+            console.log('already checked');
             socket.emit('sensorUpdateRequest', {
                 msg: 'requesting sensor data',
                 sensorStatus: 'False'
             });
         }
         else {
+            // change button click state
+            $('#sensorTempHumButton').attr("data-clicked", "true");
+            $('#sensorTempHumButton').text("Click to stop");
+            $('#sensorBtnLabel').text("Sensors active!");
+
+            // build img for sensor connecting gif
+            let sensorgifImg = $('<img>');
+            $(sensorgifImg).attr("src", "./static/imgs/connect.gif");
+            $(sensorgifImg).attr("alt", "sensor data loading");
+            $(sensorgifImg).addClass("sensorgifImg")
+            $('#sensorGifArea').append(sensorgifImg);
+
             // unchecked request sensor data
             socket.emit('sensorUpdateRequest', {
                 msg: 'requesting sensor data',
@@ -33,6 +67,84 @@ $(document).ready(function() {
     // socket sensor data 
     socket.on('tempHumSensorUpdate', function(sensorData) {
         console.log('tempHumSensorUpdate returned: ', sensorData);
+        // convert object data to array
+        let sensorDataArr = Object.entries(sensorData);
+        // clear container div
+        $('#sensorDataArea').empty();
+
+        // perform for loop creating sensor data section
+        for (let num = 0; num < sensorDataArr.length; num++){
+            // create row div wrapper
+            let rowWrapper = $('<div>');
+            $(rowWrapper).addClass("row d-flex dataArea justify-content-between mt-2 mb-2");
+            // -- create sensor title section --
+            let sensorTitleCol = $('<div>');
+            $(sensorTitleCol).addClass("p-3 col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 sensorArea");
+            // create img for group
+            let sensorTitleImg = $('<img>');
+            $(sensorTitleImg).addClass("sensorIcon m-1");
+            $(sensorTitleImg).attr("src", "../static/imgs/sensor.png");
+            $(sensorTitleImg).attr("alt", "sensor");
+            // create text parts for sensor title group
+            let sensorTitleP1 = $('<p>');
+            $(sensorTitleP1).addClass("font-weight-bolder m-0");
+            $(sensorTitleP1).text("Sensor:");
+            let sensorTitleP2 = $('<p>');
+            $(sensorTitleP2).attr("id", "sensor" + (parseInt(num) + 1));
+            $(sensorTitleP2).addClass("m-0");
+            $(sensorTitleP2).text((parseInt(num) + 1));
+            // append parts to sensorTitleCol
+            $(sensorTitleCol).append(sensorTitleImg, sensorTitleP1, sensorTitleP2);
+
+            // -- create humidity data section--
+            let sensorHumCol = $('<div>');
+            $(sensorHumCol).addClass("p-3 col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3");
+            // create img for group
+            let sensorHumImg = $('<img>');
+            $(sensorHumImg).addClass("dataIcons m-3");
+            $(sensorHumImg).attr("src", "../static/imgs/humidity.png");
+            $(sensorHumImg).attr("alt", "humidity");
+            // create text for humidity sensor
+            let sensorHumP = $('<p>');
+            $(sensorHumP).attr("id", "humData");
+            $(sensorHumP).text(sensorDataArr[num][1].humidity + '%');
+            // append parts to sensorHumCol
+            $(sensorHumCol).append(sensorHumImg, sensorHumP);
+
+            // -- create temp data section --
+            let sensorTempCol = $('<div>');
+            $(sensorTempCol).addClass("p-3 col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3");
+            // create img for group
+            let sensorTempImg = $('<img>');
+            $(sensorTempImg).addClass("dataIcons m-3");
+            $(sensorTempImg).attr("src", "../static/imgs/thermometer.png");
+            $(sensorTempImg).attr("alt", "temperature");
+            // create text for temperature sensor
+            let sensorTempP = $('<p>');
+            $(sensorTempP).attr("id", "tempData");
+            $(sensorTempP).html(sensorDataArr[num][1].tempInF + '&#8457;')
+            // append parts to sensorTempCol
+            $(sensorTempCol).append(sensorTempImg, sensorTempP);
+
+            // -- create battery data section --
+            let sensorBattCol = $('<div>');
+            $(sensorBattCol).addClass("p-3 col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3");
+            // create img for group
+            let sensorBattImg = $('<img>');
+            $(sensorBattImg).addClass("dataIcons m-3");
+            $(sensorBattImg).attr("src", "../static/imgs/battery.png");
+            $(sensorBattImg).attr("alt", "battery");
+            // create text for temperature sensor
+            let sensorBattP = $('<p>');
+            $(sensorBattP).attr("id", "battData");
+            $(sensorBattP).text(sensorDataArr[num][1].battery + '%');
+            // append parts to sensorBattCol
+            $(sensorBattCol).append(sensorBattImg, sensorBattP);
+
+            // -- append sections to div wrapper --
+            $(rowWrapper).append(sensorTitleCol, sensorHumCol, sensorTempCol, sensorBattCol);
+            $('#sensorDataArea').append(rowWrapper);
+        }
     });
     });
     });
