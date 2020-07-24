@@ -76,7 +76,7 @@ $(document).ready(function() {
         for (let num = 0; num < sensorDataArr.length; num++){
             // create row div wrapper
             let rowWrapper = $('<div>');
-            $(rowWrapper).addClass("row d-flex dataArea justify-content-between mt-2 mb-2");
+            $(rowWrapper).addClass("row d-flex dataArea justify-content-between mt-3 mb-3");
             // -- create sensor title section --
             let sensorTitleCol = $('<div>');
             $(sensorTitleCol).addClass("p-3 col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 sensorArea");
@@ -213,9 +213,6 @@ $(document).ready(function() {
         else {
             $('#timeImgSec').empty();
         }
-        
-        
-        // $('#timelapseData').append(frameCount, remaingFrames, loadingImg);
     });
 
     $(function() { $("#timelapseBtn").click(function (e) { 
@@ -304,6 +301,16 @@ $(document).ready(function() {
 
     // --------------------- Flask WebSocketIO END -------------------------------
 
+    // Range Slider
+    var slider = document.getElementById("focusRange");
+    var output = document.getElementById("focusValue");
+    output.innerHTML = slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+    output.innerHTML = this.value;
+    }
+
     // Add listener to gallery images to launch modal
     $(document).on('click', ".galleryImg", function(e){ 
         e.preventDefault();
@@ -320,6 +327,18 @@ $(document).ready(function() {
             filename = '/home/pi/shared/3DPrinterCam/' + filename;
         $.post('/PhotoDelete', {filenameVal: filename}, function(result) {
             grabGalleryData();
+            });
+        });    
+    });
+
+    // Event listener to update focus
+    $(function() { $("#focusBtn").click(function (e) { 
+        e.preventDefault();
+        let focusVal = $('#focusRange').val();
+            console.log('focus value', focusVal)
+        $.post('/Focus', {focusValue: focusVal}, function(result) {
+            console.log('JS focus adjusted!')
+            console.log('result', result)
             });
         });    
     });
@@ -388,7 +407,7 @@ $(document).ready(function() {
         $('#photoGallery').empty();
         for(i=0; i < pageListArr.length; i++) {
             let startDiv = $('<div>');
-            $(startDiv).addClass('col-3');
+            $(startDiv).addClass('col-4');
             let startImg = $('<img>');
             $(startImg).addClass('galleryImg img-thumbnail img-fluid mb-3');
             $(startImg).attr('src', '../static/imgs/captures/' + pageListArr[i]);

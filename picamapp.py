@@ -51,7 +51,7 @@ def video_feed():
     return Response(gen(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# Photo Snap Function
+# Photo Snap Route
 @app.route('/PhotoSnap', methods=['GET', 'POST'])
 def PhotoSnap():
     print("snap snap")
@@ -83,7 +83,7 @@ def PhotoSnap():
 
     return "Nothing"
 
-# Delete Photo Function
+# Delete Photo Route
 @app.route('/PhotoDelete', methods=['GET', 'POST'])
 def PhotoDelete():
     filenameVal = request.form['filenameVal']
@@ -92,14 +92,22 @@ def PhotoDelete():
     print("confirmed deletion")
     return "Nothing"
 
-# Gallery Provide & Update
+# Gallery Provide & Update Route
 @app.route('/photoGalleryBuild', methods=['GET', 'POST'])
 def photoGalleryBuild():
     path = "/home/pi/shared/3DPrinterCam/static/imgs/captures/"
     imgData = map(os.path.basename, sorted(glob.glob(path + "*jpg"), reverse=True))
-    # print('imgdata: ', list(imgData))
     
     return jsonify({"imgArray": list(imgData)})
+
+# Focus Camera Route
+@app.route('/Focus', methods=['GET', 'POST'])
+def focusCam():
+    focus_value = int(request.form['focusValue'])
+    print('focus value received: ', focus_value)
+    vc.set(28, focus_value)
+    print("focused!")
+    return "Nothing"
 
 # -------------------- @app Routes End-----------------------------------
 # -------------------- Govee Sensor Start-----------------------------------
