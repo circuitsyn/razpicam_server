@@ -215,6 +215,7 @@ $(document).ready(function() {
         }
     });
 
+    // function to detect click to start timelapse
     $(function() { $("#timelapseBtn").click(function (e) { 
         e.preventDefault();
         // gather values
@@ -366,6 +367,7 @@ $(document).ready(function() {
     grabGalleryData = () => {
         $.getJSON('/photoGalleryBuild',
         function(data) {
+            console.log('returned gallery data', data)
             if (data || data.imgArray) {
                 storePhotoData(data.imgArray);
             }

@@ -64,7 +64,7 @@ def PhotoSnap():
     height = vc.get(4)
     print("width: ", width, "height: ", height)
 
-    snapPath = '/home/pi/shared/3DPrinterCam/static/imgs/captures/'
+    snapPath = os.path.join(os.getcwd(), 'static', 'imgs', 'captures/')
 
     # check if capture path exists, create if not
     if not os.path.exists(snapPath):
@@ -75,7 +75,7 @@ def PhotoSnap():
             # code to write frame to jpeg with timestamp as filename
             isWritten = cv2.imwrite(snapPath + curTime +'.jpg', frame)
             if isWritten:
-                print('image successfully written to ' + '/home/pi/shared/3DPrinterCam/static/imgs/captures/'+ curTime +'.jpg' )
+                print('image successfully written to ' + '/static/imgs/captures/'+ curTime +'.jpg' )
             else:
                 print('img write failed')
         else:
@@ -95,9 +95,10 @@ def PhotoDelete():
 # Gallery Provide & Update Route
 @app.route('/photoGalleryBuild', methods=['GET', 'POST'])
 def photoGalleryBuild():
-    path = "/home/pi/shared/3DPrinterCam/static/imgs/captures/"
+    path = os.path.join(os.getcwd(), 'static', 'imgs', 'captures/', )
+    print ('path', path)
     imgData = map(os.path.basename, sorted(glob.glob(path + "*jpg"), reverse=True))
-    
+    print('imgData:', imgData)
     return jsonify({"imgArray": list(imgData)})
 
 # Focus Camera Route
